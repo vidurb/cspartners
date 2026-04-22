@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy Studio
-        uses: sanity-io/github-action-sanity@v1
+        uses: sanity-io/github-action-sanity@v0.8-alpha
         env:
           SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
         with:
