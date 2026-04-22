@@ -1,0 +1,42 @@
+---
+interface Props {
+	member: {
+		name: string;
+		role: string;
+		photoUrl: string;
+		profilePdf?: string | null;
+	};
+}
+
+const { member } = Astro.props;
+---
+
+<div
+	class="flex flex-col items-center text-center bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+>
+	<div class="w-36 h-36 rounded-full overflow-hidden mb-4 ring-2 ring-brand-gold/20">
+		<img
+			src={member.photoUrl}
+			alt=""
+			class="w-full h-full object-cover"
+			width="144"
+			height="144"
+			loading="lazy"
+		/>
+	</div>
+	{
+		member.profilePdf ? (
+			<a
+				href={member.profilePdf}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="font-display text-lg font-semibold text-brand-navy hover:text-brand-gold"
+			>
+				{member.name}
+			</a>
+		) : (
+			<h3 class="font-display text-lg font-semibold text-brand-navy">{member.name}</h3>
+		)
+	}
+	<p class="text-sm text-slate-600 mt-1">{member.role}</p>
+</div>

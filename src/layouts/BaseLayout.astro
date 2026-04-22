@@ -1,0 +1,31 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import DisclaimerPopup from '../components/DisclaimerPopup.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+	title: string;
+	description: string;
+	image?: ImageMetadata | string;
+	mainClass?: string;
+}
+
+const { title, description, image, mainClass = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} image={image} />
+	</head>
+	<body class="min-h-screen flex flex-col bg-brand-cream text-slate-800">
+		<DisclaimerPopup />
+		<Header />
+		<main class:list={['flex-1 w-full', mainClass]}>
+			<slot />
+		</main>
+		<Footer />
+	</body>
+</html>

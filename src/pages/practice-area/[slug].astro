@@ -1,0 +1,52 @@
+---
+import { sanityClient } from 'sanity:client';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
+import PortableTextBody from '../../components/PortableTextBody.astro';
+import { SITE_TITLE } from '../../consts';
+import { practiceAreaBySlugQuery, practiceAreasListQuery } from '../../lib/sanity/queries';
+import type { PracticeAreaDetail, PracticeAreaListItem } from '../../lib/sanity/types';
+import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+
+export async function getStaticPaths() {
+	const areas = await sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery);
+	return areas.map((a) => ({
+		params: { slug: a.slug },
+	}));
+}
+
+const slug = Astro.params.slug;
+if (!slug || Array.isArray(slug)) {
+	return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const entry = await sanityClient.fetch<PracticeAreaDetail | null>(practiceAreaBySlugQuery, { slug });
+
+if (!entry) {
+	return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const { title, description, icon, body } = entry;
+const iconUrl = resolveImageUrl(icon, 128) ?? '';
+---
+
+<BaseLayout title={`${title} — ${SITE_TITLE}`} description={description}>
+	<Hero title={title} variant="dark" />
+	<div class="max-w-6xl mx-auto px-4 py-12 grid lg:grid-cols-[1fr_280px] gap-12 items-start">
+		<div class="max-w-3xl text-slate-700 text-lg leading-relaxed space-y-6 [&_strong]:text-brand-navy">
+			<PortableTextBody value={body} />
+		</div>
+		<div class="hidden lg:block sticky top-28">
+			<div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm text-center">
+				{iconUrl && <img src={iconUrl} alt="" class="mx-auto max-h-32 w-auto object-contain mb-4" width={128} height={128} />}
+				<p class="text-sm text-slate-600 mb-4">{description}</p>
+				<a
+					href="/contact-career"
+					class="inline-block w-full rounded-md bg-brand-gold py-2 font-semibold text-brand-navy hover:bg-brand-gold-light"
+				>
+					Get in touch
+				</a>
+			</div>
+		</div>
+	</div>
+</BaseLayout>

@@ -1,0 +1,32 @@
+---
+import { sanityClient } from 'sanity:client';
+import BlogCard from '../../components/BlogCard.astro';
+import Hero from '../../components/Hero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { blogPostsListQuery } from '../../lib/sanity/queries';
+import type { BlogPostListItem } from '../../lib/sanity/types';
+import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+
+const postsRaw = await sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery);
+const posts = postsRaw.sort((a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf());
+---
+
+<BaseLayout title={`Blogs — ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+	<Hero title="Blogs" variant="dark" />
+	<div class="max-w-6xl mx-auto px-4 py-16">
+		<div class="grid md:grid-cols-2 gap-8">
+			{
+				posts.map((post) => (
+					<BlogCard
+						title={post.title}
+						description={post.description}
+						href={`/blog/${post.slug}/`}
+						pubDate={new Date(post.publishedAt)}
+						heroImageUrl={resolveImageUrl(post.heroImage, 800)}
+					/>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>

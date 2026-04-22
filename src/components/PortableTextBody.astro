@@ -1,0 +1,27 @@
+---
+import { PortableText } from 'astro-portabletext';
+import type { PortableTextBlock } from '@portabletext/types';
+
+interface Props {
+	value: PortableTextBlock[] | null | undefined;
+}
+
+const { value } = Astro.props;
+---
+
+{
+	value && value.length > 0 ? (
+		<div class="article-body text-lg leading-relaxed space-y-6 [&_a]:text-brand-gold [&_a]:underline [&_strong]:text-brand-navy">
+			<PortableText value={value} />
+		</div>
+	) : null
+}
+
+<style>
+	.article-body :global(p) {
+		margin-bottom: 1rem;
+	}
+	.article-body :global(p:empty) {
+		display: none;
+	}
+</style>

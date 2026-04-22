@@ -1,0 +1,28 @@
+---
+interface Props {
+	title: string;
+	subtitle?: string;
+	variant?: 'dark' | 'light';
+}
+
+const { title, subtitle, variant = 'dark' } = Astro.props;
+const bg =
+	variant === 'dark'
+		? 'bg-gradient-to-br from-brand-navy via-brand-navy-light to-slate-900 text-white'
+		: 'bg-brand-paper text-brand-navy border-b border-amber-200/40';
+---
+
+<section class:list={['relative py-16 md:py-24 px-4', bg]}>
+	<div class="max-w-5xl mx-auto text-center">
+		<h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight mb-4">
+			{title}
+		</h1>
+		{
+			subtitle && (
+				<p class:list={['text-lg md:text-xl max-w-3xl mx-auto opacity-90', variant === 'light' && 'text-slate-600']}>
+					{subtitle}
+				</p>
+			)
+		}
+	</div>
+</section>

@@ -1,0 +1,58 @@
+---
+import type { PortableTextBlock } from '@portabletext/types';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import PortableTextBody from '../components/PortableTextBody.astro';
+
+interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	author: string;
+	heroImageUrl?: string;
+	/** Used for OG / Twitter when no hero */
+	ogImage?: string;
+	body?: PortableTextBlock[] | null;
+}
+
+const { title, description, pubDate, updatedDate, author, heroImageUrl, ogImage, body } = Astro.props;
+const metaImage = heroImageUrl ?? ogImage;
+---
+
+<BaseLayout title={`${title} — C&S Partners`} description={description} image={metaImage}>
+	<article class="pb-16">
+		{
+			heroImageUrl && (
+				<div class="w-full max-w-5xl mx-auto px-4 pt-8">
+					<img
+						src={heroImageUrl}
+						alt=""
+						class="w-full rounded-xl shadow-lg border border-slate-200/80"
+						width={1200}
+						height={540}
+						loading="eager"
+					/>
+				</div>
+			)
+		}
+		<div class="max-w-3xl mx-auto px-4 pt-10">
+			<header class="text-center mb-10 not-prose">
+				<p class="text-brand-gold font-semibold text-sm uppercase tracking-wide mb-2">
+					<FormattedDate date={pubDate} />
+					{
+						updatedDate && (
+							<span class="text-slate-500 font-normal normal-case">
+								{' '}
+								· Updated <FormattedDate date={updatedDate} />
+							</span>
+						)
+					}
+				</p>
+				<h1 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy leading-tight">{title}</h1>
+				<p class="text-slate-600 mt-3">By {author}</p>
+			</header>
+			<PortableTextBody value={body} />
+		</div>
+	</article>
+</BaseLayout>

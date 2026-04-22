@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+
+@theme {
+	--font-sans: 'Source Serif 4', 'Georgia', 'Times New Roman', serif;
+	--font-display: 'Cormorant Garamond', 'Georgia', serif;
+
+	--color-brand-navy: #0f172a;
+	--color-brand-navy-light: #1e293b;
+	--color-brand-gold: #b8860b;
+	--color-brand-gold-light: #d4a84b;
+	--color-brand-cream: #faf8f5;
+	--color-brand-paper: #f4f1eb;
+}
+
+@layer base {
+	html {
+		scroll-behavior: smooth;
+	}
+	body {
+		@apply bg-brand-cream text-slate-800 antialiased;
+		font-family: var(--font-sans);
+	}
+}
+
+@layer utilities {
+	.font-display {
+		font-family: var(--font-display);
+	}
+}

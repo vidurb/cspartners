@@ -1,0 +1,89 @@
+---
+interface Props {
+	idSuffix?: string;
+	variant?: 'light' | 'dark';
+}
+
+const { idSuffix = 'default', variant = 'light' } = Astro.props;
+const nameId = `contact-name-${idSuffix}`;
+const mobileId = `contact-mobile-${idSuffix}`;
+const emailId = `contact-email-${idSuffix}`;
+const messageId = `contact-message-${idSuffix}`;
+const isDark = variant === 'dark';
+---
+
+<form class:list={['space-y-4 max-w-xl mx-auto text-left', isDark && 'text-slate-200']} action="#" method="post">
+	<p
+		class:list={[
+			'text-sm text-center mb-6',
+			isDark ? 'text-slate-300' : 'text-slate-600',
+		]}
+	>
+		We welcome your inquiries. If you require additional information, have a legal query, or wish to engage our services,
+		please use this form. You may also reach us by telephone or email. A member of our team will respond promptly.
+	</p>
+	<div class="grid sm:grid-cols-2 gap-4">
+		<div>
+			<label for={nameId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
+				Name
+			</label>
+			<input
+				id={nameId}
+				name="name"
+				type="text"
+				autocomplete="name"
+				placeholder="Name"
+				class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
+			/>
+		</div>
+		<div>
+			<label for={mobileId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
+				Mobile number
+			</label>
+			<input
+				id={mobileId}
+				name="mobile"
+				type="tel"
+				autocomplete="tel"
+				placeholder="Mobile number"
+				required
+				class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
+			/>
+		</div>
+	</div>
+	<div>
+		<label for={emailId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
+			Email
+		</label>
+		<input
+			id={emailId}
+			name="email"
+			type="email"
+			autocomplete="email"
+			placeholder="Email"
+			required
+			class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
+		/>
+	</div>
+	<div>
+		<label for={messageId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
+			Message
+		</label>
+		<textarea
+			id={messageId}
+			name="message"
+			rows="4"
+			placeholder="Message"
+			class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none resize-y"
+		></textarea>
+	</div>
+	<button
+		type="submit"
+		class="w-full rounded-md bg-brand-gold px-4 py-3 font-semibold text-brand-navy hover:bg-brand-gold-light transition-colors"
+	>
+		Send
+	</button>
+	<p class:list={['text-xs text-center', isDark ? 'text-slate-400' : 'text-slate-500']}>
+		This form is not yet connected to a server — submissions are for layout only.
+	</p>
+</form>

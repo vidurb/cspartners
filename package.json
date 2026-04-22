@@ -1,0 +1,46 @@
+{
+  "name": "cspartners",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "sanity:import": "tsx scripts/sanity/import-content.ts",
+    "sanity:import:dry": "tsx scripts/sanity/import-content.ts --dry-run",
+    "sanity:import:verify": "tsx scripts/sanity/import-content.ts --verify"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.8",
+    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/react": "^5.0.3",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/vercel": "^10.0.4",
+    "@portabletext/types": "^4.0.2",
+    "@sanity/astro": "^3.3.1",
+    "@sanity/client": "^7.21.0",
+    "@sanity/image-url": "^2.1.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.1.6",
+    "astro-portabletext": "^0.13.0",
+    "cheerio": "^1.2.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "react-is": "^19.2.5",
+    "sanity": "^5.22.0",
+    "sharp": "^0.34.3",
+    "styled-components": "^6.4.1",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "gray-matter": "^4.0.3",
+    "tsx": "^4.21.0"
+  }
+}

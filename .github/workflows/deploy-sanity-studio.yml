@@ -1,0 +1,20 @@
+name: Deploy Sanity Studio
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Studio
+        uses: sanity-io/github-action-sanity@v1
+        env:
+          SANITY_AUTH_TOKEN: ${{ secrets.SANITY_AUTH_TOKEN }}
+        with:
+          args: deploy

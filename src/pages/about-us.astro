@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ContactForm from '../components/ContactForm.astro';
+import Hero from '../components/Hero.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<BaseLayout title={`About Us — ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+	<Hero title="About Us" variant="dark" />
+	<div class="max-w-3xl mx-auto px-4 py-16 space-y-10 text-slate-700 leading-relaxed text-lg">
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">From the Founders’ Desk</h2>
+			<p>
+				For over three decades, the three of us have walked the same corridors of law. Initially as law students, then as
+				colleagues, and eventually as partners bound by a shared purpose. C&S Partners is the natural extension of that
+				journey. It reflects not just our collective experience, but the values that have shaped us since our earliest days
+				in the profession: integrity in every action, clarity in every solution, and an unwavering commitment to the people
+				who place their trust in us.
+			</p>
+			<p class="mt-4">
+				At the heart of our practice is a simple belief: clients deserve advice that is both legally sound and practically
+				workable. We approach every matter with a client‑centric mindset, ensuring that our strategies are grounded in ethics,
+				informed by experience, and tailored to real‑world outcomes.
+			</p>
+			<p class="mt-6 font-medium text-brand-navy">
+				— Harneet Singh ‘Bobby’ Chandhoke, Sudhir Sharma, Deepali Chandhoke
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">Who We Are</h2>
+			<p>
+				C&S Partners is a full-service law firm with offices in New Delhi and Mumbai. The firm is built on a commitment to
+				clarity, strategy, and execution that aligns with the client’s long‑term interests. With a team of about 30 lawyers
+				across Delhi & Mumbai, our partners and lawyers bring extensive experience across disputes, regulatory matters,
+				corporate transactions and employment law advisory, enabling us to deliver legal solutions that are practical,
+				precise, and tailored to the realities of modern business.
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">Client Centric Thinking, Always</h2>
+			<p>
+				We work seamlessly across jurisdictions through a trusted pan‑India network, ensuring that clients receive consistent
+				quality, responsiveness, and strategic oversight wherever their matters arise.
+			</p>
+			<p class="mt-4">
+				Our work begins with understanding the client’s business, industry, and risk landscape. Every piece of advice is
+				shaped by commercial context and long‑term objectives. Whether the matter involves a regulatory investigation,
+				developing a litigation strategy, advising on a cross‑border investment, or workplace compliance, our approach
+				remains grounded in clarity, responsiveness, and outcomes that endure.
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">Strategy Before Action</h2>
+			<p>
+				We believe that strategy must lead every decision. Litigation is used thoughtfully, not reflexively. Before taking
+				any step — whether filing a petition, responding to a notice, or structuring a transaction — we assess what will best
+				advance the client’s interests. This discipline defines the way we work and sets the tone for every engagement.
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">Clarity in Process, Precision in Execution</h2>
+			<p>
+				Our matters are staffed with structured thinking and layered partner review. We invest in accuracy, preparation, and
+				standards that match the complexity of the issues we handle — so clients receive advice they can rely on when stakes are high.
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">Collaboration That Strengthens Every Matter</h2>
+			<p>
+				We maintain an open-door culture where junior lawyers engage directly with clients and strategy. Collaboration across experience levels helps us deliver sharper analysis and more resilient outcomes.
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">What We Do</h2>
+			<p>
+				Our practice spans arbitration; civil, corporate and commercial litigation across Supreme Court, High Courts, NCLT,
+				and tribunals; white-collar defence; regulatory work across SEBI, RBI, MCA, and related forums; mergers and
+				acquisitions; private equity and venture capital; commercial contracts and due diligence; insolvency and
+				bankruptcy; projects and infrastructure; employment and labour; and POSH & POCSO advisory.
+			</p>
+			<p class="mt-6">
+				<a href="/practice-area" class="font-semibold text-brand-gold hover:text-brand-gold-light">Explore practice areas →</a>
+			</p>
+		</section>
+
+		<section>
+			<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">Pan India Network</h2>
+			<p>
+				With offices in Delhi and Mumbai and a trusted counsel network across jurisdictions, we aim to deliver consistent
+				preparation and strategic oversight wherever our clients need us.
+			</p>
+		</section>
+	</div>
+
+	<section class="py-16 px-4 bg-brand-paper">
+		<div class="max-w-3xl mx-auto text-center">
+			<h2 class="font-display text-3xl font-semibold text-brand-navy mb-8">Contact Us</h2>
+			<ContactForm idSuffix="about" />
+		</div>
+	</section>
+</BaseLayout>
