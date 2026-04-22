@@ -20,7 +20,7 @@ export default defineConfig({
 			projectId: 'u1i19rrb',
 			dataset: 'production',
 			useCdn: false,
-			apiVersion: '2025-04-22',
+			apiVersion: 'v2026-04-22',
 			studioBasePath: '/admin',
 			studioRouterHistory: 'hash',
 		}),

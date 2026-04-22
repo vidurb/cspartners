@@ -112,7 +112,7 @@ function logImagePlan(relativeFromFile: string, filePath: string, fallbackUrls: 
 }
 
 function createDocumentId(type: (typeof CONTENT_TYPES)[number]): string {
-	return `${type}.${randomUUID()}`;
+	return `${randomUUID()}`;
 }
 
 async function wipeContent(c: SanityClient) {

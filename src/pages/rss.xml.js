@@ -18,7 +18,7 @@ export async function GET(context) {
 	const client = createClient({
 		projectId,
 		dataset,
-		apiVersion: '2025-04-22',
+		apiVersion: 'v2026-04-22',
 		useCdn: true,
 	});
 
