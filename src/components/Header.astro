@@ -1,21 +1,30 @@
 ---
 import { Image } from 'astro:assets';
 import logo from '../assets/brand/logo.png';
-import { NAV_LINKS } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+import type { SiteSettingsDoc } from '../lib/sanity/types';
+
+interface Props {
+	site: SiteSettingsDoc;
+}
+
+const { site } = Astro.props;
+const navLinks = site.navLinks;
+const homeAria = site.headerHomeAriaLabel ?? site.siteTitle;
+const mobileHomeLabel = site.mobileMenuHomeLabel ?? site.siteTitle;
 ---
 
 <header
 	class="sticky top-0 z-50 border-b border-amber-900/10 bg-brand-cream/95 backdrop-blur-md shadow-sm"
 >
 	<div class="max-w-6xl mx-auto px-4 flex items-center justify-between gap-4 h-20 md:h-24">
-		<a href="/" class="shrink-0 flex items-center gap-2" aria-label="C&S Partners home">
+		<a href="/" class="shrink-0 flex items-center gap-2" aria-label={homeAria}>
 			<Image src={logo} alt="C&S Partners" class="h-10 md:h-12 w-auto" width={200} height={48} />
 		</a>
 
 		<nav class="hidden lg:flex items-center gap-1" aria-label="Primary">
 			{
-				NAV_LINKS.map(({ href, label }) => (
+				navLinks.map(({ href, label }) => (
 					<HeaderLink
 						href={href}
 						class="px-3 py-2 text-sm font-medium text-brand-navy hover:text-brand-gold transition-colors rounded-md"
@@ -47,9 +56,9 @@ import HeaderLink from './HeaderLink.astro';
 		aria-label="Mobile"
 	>
 		<div class="flex flex-col gap-1">
-			<a href="/" class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100">C&S Partners</a>
+			<a href="/" class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100">{mobileHomeLabel}</a>
 			{
-				NAV_LINKS.map(({ href, label }) => (
+				navLinks.map(({ href, label }) => (
 					<a href={href} class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100 hover:text-brand-gold">
 						{label}
 					</a>

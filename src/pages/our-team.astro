@@ -4,12 +4,17 @@ import ContactForm from '../components/ContactForm.astro';
 import Hero from '../components/Hero.astro';
 import TeamMember from '../components/TeamMember.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { teamMembersListQuery } from '../lib/sanity/queries';
-import type { TeamMemberDoc } from '../lib/sanity/types';
+import { siteSettingsCompactQuery, teamMembersListQuery } from '../lib/sanity/queries';
+import type { SiteSettingsDoc, TeamMemberDoc } from '../lib/sanity/types';
 import { resolveImageUrl } from '../lib/sanity/imageUrl';
+import { mergeSiteSettings } from '../lib/sanity/mergeContent';
 
-const teamMembersRaw = await sanityClient.fetch<TeamMemberDoc[]>(teamMembersListQuery);
+const [siteRaw, teamMembersRaw] = await Promise.all([
+	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	sanityClient.fetch<TeamMemberDoc[]>(teamMembersListQuery),
+]);
+
+const site = mergeSiteSettings(siteRaw);
 const teamMembers = teamMembersRaw.map((m) => ({
 	name: m.name,
 	role: m.role,
@@ -18,7 +23,7 @@ const teamMembers = teamMembersRaw.map((m) => ({
 }));
 ---
 
-<BaseLayout title={`Our Team — ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+<BaseLayout title={`Our Team — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
 	<Hero title="Our Team" variant="dark" />
 	<div class="max-w-6xl mx-auto px-4 py-16">
 		<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">

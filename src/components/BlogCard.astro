@@ -7,9 +7,10 @@ interface Props {
 	href: string;
 	pubDate: Date;
 	heroImageUrl?: string;
+	readMoreLabel?: string;
 }
 
-const { title, description, href, pubDate, heroImageUrl } = Astro.props;
+const { title, description, href, pubDate, heroImageUrl, readMoreLabel = 'Read more' } = Astro.props;
 ---
 
 <article
@@ -42,7 +43,7 @@ const { title, description, href, pubDate, heroImageUrl } = Astro.props;
 		</h3>
 		<p class="text-slate-600 text-sm leading-relaxed flex-1 line-clamp-3">{description}</p>
 		<a href={href} class="mt-4 text-sm font-semibold text-brand-gold hover:text-brand-gold-light inline-flex items-center gap-1">
-			Read more
+			{readMoreLabel}
 			<span aria-hidden="true">→</span>
 		</a>
 	</div>

@@ -14,13 +14,16 @@ interface Props {
 	/** Used for OG / Twitter when no hero */
 	ogImage?: string;
 	body?: PortableTextBlock[] | null;
+	/** Brand suffix in document title (from Sanity site settings). */
+	siteTitle?: string;
 }
 
-const { title, description, pubDate, updatedDate, author, heroImageUrl, ogImage, body } = Astro.props;
+const { title, description, pubDate, updatedDate, author, heroImageUrl, ogImage, body, siteTitle = 'C&S Partners' } =
+	Astro.props;
 const metaImage = heroImageUrl ?? ogImage;
 ---
 
-<BaseLayout title={`${title} — C&S Partners`} description={description} image={metaImage}>
+<BaseLayout title={`${title} — ${siteTitle}`} description={description} image={metaImage}>
 	<article class="pb-16">
 		{
 			heroImageUrl && (

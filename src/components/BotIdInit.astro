@@ -1,0 +1,12 @@
+<script>
+	import { initBotId } from 'botid/client/core';
+
+	initBotId({
+		protect: [
+			{
+				path: '/_actions/*',
+				method: 'POST',
+			},
+		],
+	});
+</script>

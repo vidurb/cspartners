@@ -3,10 +3,10 @@ import { sanityClient } from 'sanity:client';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
 import PortableTextBody from '../../components/PortableTextBody.astro';
-import { SITE_TITLE } from '../../consts';
-import { practiceAreaBySlugQuery, practiceAreasListQuery } from '../../lib/sanity/queries';
-import type { PracticeAreaDetail, PracticeAreaListItem } from '../../lib/sanity/types';
+import { practiceAreaBySlugQuery, practiceAreasListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { PracticeAreaDetail, PracticeAreaListItem, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
 export async function getStaticPaths() {
 	const areas = await sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery);
@@ -20,7 +20,12 @@ if (!slug || Array.isArray(slug)) {
 	return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
-const entry = await sanityClient.fetch<PracticeAreaDetail | null>(practiceAreaBySlugQuery, { slug });
+const [siteRaw, entry] = await Promise.all([
+	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	sanityClient.fetch<PracticeAreaDetail | null>(practiceAreaBySlugQuery, { slug }),
+]);
+
+const site = mergeSiteSettings(siteRaw);
 
 if (!entry) {
 	return new Response(null, { status: 404, statusText: 'Not Found' });
@@ -28,9 +33,10 @@ if (!entry) {
 
 const { title, description, icon, body } = entry;
 const iconUrl = resolveImageUrl(icon, 128) ?? '';
+const ctaLabel = site.practiceAreaCtaLabel ?? 'Get in touch';
 ---
 
-<BaseLayout title={`${title} — ${SITE_TITLE}`} description={description}>
+<BaseLayout title={`${title} — ${site.siteTitle}`} description={description}>
 	<Hero title={title} variant="dark" />
 	<div class="max-w-6xl mx-auto px-4 py-12 grid lg:grid-cols-[1fr_280px] gap-12 items-start">
 		<div class="max-w-3xl text-slate-700 text-lg leading-relaxed space-y-6 [&_strong]:text-brand-navy">
@@ -44,7 +50,7 @@ const iconUrl = resolveImageUrl(icon, 128) ?? '';
 					href="/contact-career"
 					class="inline-block w-full rounded-md bg-brand-gold py-2 font-semibold text-brand-navy hover:bg-brand-gold-light"
 				>
-					Get in touch
+					{ctaLabel}
 				</a>
 			</div>
 		</div>

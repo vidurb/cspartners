@@ -3,25 +3,35 @@ import { Image } from 'astro:assets';
 import { sanityClient } from 'sanity:client';
 import BlogCard from '../components/BlogCard.astro';
 import ContactForm from '../components/ContactForm.astro';
+import PortableTextBody from '../components/PortableTextBody.astro';
 import PracticeAreaCard from '../components/PracticeAreaCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import groupPhoto from '../assets/blog/group-photo.jpg';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import {
 	blogPostsListQuery,
+	homePageQuery,
 	practiceAreasListQuery,
+	siteSettingsCompactQuery,
 	teamMembersListQuery,
 } from '../lib/sanity/queries';
-import type { BlogPostListItem, PracticeAreaListItem, TeamMemberDoc } from '../lib/sanity/types';
+import type { BlogPostListItem, HomePageDoc, PracticeAreaListItem, SiteSettingsDoc, TeamMemberDoc } from '../lib/sanity/types';
 import { resolveImageUrl } from '../lib/sanity/imageUrl';
+import { mergeHomePage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
-const practiceRaw = await sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery);
+const [siteRaw, homeRaw, practiceRaw, posts, teamMembersRaw] = await Promise.all([
+	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	sanityClient.fetch<Partial<HomePageDoc> | null>(homePageQuery),
+	sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery),
+	sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery),
+	sanityClient.fetch<TeamMemberDoc[]>(teamMembersListQuery),
+]);
+
+const site = mergeSiteSettings(siteRaw);
+const home = mergeHomePage(homeRaw);
+
 const practiceAreas = practiceRaw.sort((a, b) => a.order - b.order);
-const posts = (await sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery)).sort(
-	(a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf(),
-);
-const latestPosts = posts.slice(0, 3);
-const teamMembersRaw = await sanityClient.fetch<TeamMemberDoc[]>(teamMembersListQuery);
+const sortedPosts = posts.sort((a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf());
+const latestPosts = sortedPosts.slice(0, 3);
 const teamPreview = teamMembersRaw
 	.sort((a, b) => a.sortOrder - b.sortOrder)
 	.slice(0, 8)
@@ -30,24 +40,26 @@ const teamPreview = teamMembersRaw
 		role: m.role,
 		photoUrl: resolveImageUrl(m.photo, 400) ?? '',
 	}));
+
+const founderImgUrl = resolveImageUrl(home.founderImage ?? null, 1024);
+const readMore = site.blogReadMoreLabel ?? 'Read more';
 ---
 
-<BaseLayout title={`${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+<BaseLayout title={site.siteTitle} description={site.siteDescription ?? ''}>
 	<section
 		class="relative bg-gradient-to-br from-brand-navy via-brand-navy-light to-slate-900 text-white px-4 py-20 md:py-28 overflow-hidden"
 	>
 		<div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,#b8860b,transparent_50%)]"></div>
 		<div class="max-w-5xl mx-auto text-center relative">
-			<h1 class="font-display text-4xl md:text-6xl font-semibold tracking-tight mb-6">Welcome to C&S Partners</h1>
+			<h1 class="font-display text-4xl md:text-6xl font-semibold tracking-tight mb-6">{home.heroTitle}</h1>
 			<p class="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-8">
-				Integrity in every action, clarity in every solution, and an unwavering commitment to those who place their trust in
-				us.
+				{home.heroSubtitle}
 			</p>
 			<a
-				href="/contact-career"
+				href={home.heroCtaHref ?? '/contact-career'}
 				class="inline-flex items-center justify-center rounded-md bg-brand-gold px-8 py-3 font-semibold text-brand-navy hover:bg-brand-gold-light transition-colors"
 			>
-				Let’s Connect
+				{home.heroCtaLabel}
 			</a>
 		</div>
 	</section>
@@ -55,39 +67,35 @@ const teamPreview = teamMembersRaw
 	<section class="py-16 px-4 bg-white">
 		<div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
 			<div>
-				<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy mb-6">From the Founder’s Desk</h2>
+				<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy mb-6">{home.founderHeading}</h2>
 				<div class="space-y-4 text-slate-700 leading-relaxed">
-					<p>
-						For over three decades, we have walked the same corridors of law — as students, colleagues, and partners
-						bound by a shared purpose. C&S Partners reflects not only our collective experience, but the values that have
-						shaped us: integrity, clarity, and commitment to those who trust us.
-					</p>
-					<p>
-						At the heart of our practice is a simple belief: clients deserve advice that is legally sound and practically
-						workable — grounded in ethics, informed by experience, and tailored to real-world outcomes.
-					</p>
-					<p class="font-medium text-brand-navy">
-						— H.S. ‘Bobby’ Chandhoke, Sudhir Sharma & Deepali Chandhoke
-					</p>
+					<PortableTextBody value={home.founderBody} />
+					{home.founderSignature && <p class="font-medium text-brand-navy">{home.founderSignature}</p>}
 					<a
-						href="/about-us"
+						href={home.founderCtaHref ?? '/about-us'}
 						class="inline-block mt-4 text-brand-gold font-semibold hover:text-brand-gold-light"
 					>
-						Know more →
+						{home.founderCtaLabel}
 					</a>
 				</div>
 			</div>
 			<div class="rounded-xl overflow-hidden shadow-lg border border-slate-200">
-				<Image src={groupPhoto} alt="" class="w-full h-auto object-cover" width={1024} height={750} />
+				{
+					founderImgUrl ? (
+						<img src={founderImgUrl} alt="" class="w-full h-auto object-cover" width={1024} height={750} loading="lazy" />
+					) : (
+						<Image src={groupPhoto} alt="" class="w-full h-auto object-cover" width={1024} height={750} />
+					)
+				}
 			</div>
 		</div>
 	</section>
 
 	<section class="py-16 px-4 bg-brand-paper">
 		<div class="max-w-6xl mx-auto">
-			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-4">Practice Areas</h2>
+			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-4">{home.practiceAreasHeading}</h2>
 			<p class="text-center text-slate-600 max-w-2xl mx-auto mb-12">
-				Full-service capabilities across disputes, regulatory matters, transactions, and compliance.
+				{home.practiceAreasIntro}
 			</p>
 			<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
 				{
@@ -105,7 +113,7 @@ const teamPreview = teamMembersRaw
 					href="/practice-area"
 					class="inline-flex font-semibold text-brand-gold hover:text-brand-gold-light"
 				>
-					View all practice areas →
+					{home.practiceAreasViewAllLabel}
 				</a>
 			</div>
 		</div>
@@ -113,7 +121,7 @@ const teamPreview = teamMembersRaw
 
 	<section class="py-16 px-4 bg-white">
 		<div class="max-w-6xl mx-auto">
-			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">Our Team</h2>
+			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">{home.teamHeading}</h2>
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
 				{
 					teamPreview.map((m) => (
@@ -139,14 +147,14 @@ const teamPreview = teamMembersRaw
 				}
 			</div>
 			<p class="text-center mt-10">
-				<a href="/our-team" class="font-semibold text-brand-gold hover:text-brand-gold-light">Meet the full team →</a>
+				<a href="/our-team" class="font-semibold text-brand-gold hover:text-brand-gold-light">{home.teamMeetFullLabel}</a>
 			</p>
 		</div>
 	</section>
 
 	<section class="py-16 px-4 bg-brand-paper">
 		<div class="max-w-6xl mx-auto">
-			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">Our Blogs</h2>
+			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">{home.blogsHeading}</h2>
 			<div class="grid md:grid-cols-3 gap-8">
 				{
 					latestPosts.map((post) => (
@@ -156,19 +164,20 @@ const teamPreview = teamMembersRaw
 							href={`/blog/${post.slug}/`}
 							pubDate={new Date(post.publishedAt)}
 							heroImageUrl={resolveImageUrl(post.heroImage, 800)}
+							readMoreLabel={readMore}
 						/>
 					))
 				}
 			</div>
 			<p class="text-center mt-10">
-				<a href="/blog" class="font-semibold text-brand-gold hover:text-brand-gold-light">All articles →</a>
+				<a href="/blog" class="font-semibold text-brand-gold hover:text-brand-gold-light">{home.blogsAllArticlesLabel}</a>
 			</p>
 		</div>
 	</section>
 
 	<section class="py-16 px-4 bg-brand-navy text-slate-200">
 		<div class="max-w-3xl mx-auto text-center">
-			<h2 class="font-display text-3xl font-semibold text-white mb-8">Contact Us</h2>
+			<h2 class="font-display text-3xl font-semibold text-white mb-8">{home.contactSectionHeading}</h2>
 			<ContactForm idSuffix="home" variant="dark" />
 		</div>
 	</section>
