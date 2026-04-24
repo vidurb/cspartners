@@ -3,16 +3,22 @@ import { sanityClient } from 'sanity:client';
 import BlogCard from '../../components/BlogCard.astro';
 import Hero from '../../components/Hero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-import { blogPostsListQuery } from '../../lib/sanity/queries';
-import type { BlogPostListItem } from '../../lib/sanity/types';
+import { blogPostsListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { BlogPostListItem, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
-const postsRaw = await sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery);
+const [siteRaw, postsRaw] = await Promise.all([
+	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery),
+]);
+
+const site = mergeSiteSettings(siteRaw);
 const posts = postsRaw.sort((a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf());
+const readMore = site.blogReadMoreLabel ?? 'Read more';
 ---
 
-<BaseLayout title={`Blogs — ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+<BaseLayout title={`Blogs — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
 	<Hero title="Blogs" variant="dark" />
 	<div class="max-w-6xl mx-auto px-4 py-16">
 		<div class="grid md:grid-cols-2 gap-8">
@@ -24,6 +30,7 @@ const posts = postsRaw.sort((a, b) => new Date(b.publishedAt).valueOf() - new Da
 						href={`/blog/${post.slug}/`}
 						pubDate={new Date(post.publishedAt)}
 						heroImageUrl={resolveImageUrl(post.heroImage, 800)}
+						readMoreLabel={readMore}
 					/>
 				))
 			}

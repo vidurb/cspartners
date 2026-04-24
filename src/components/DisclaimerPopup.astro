@@ -1,4 +1,14 @@
 ---
+import type { DisclaimerSettingsDoc } from '../lib/sanity/types';
+
+interface Props {
+	disclaimer: DisclaimerSettingsDoc;
+}
+
+const { disclaimer } = Astro.props;
+const title = disclaimer.title ?? 'Disclaimer';
+const bullets = disclaimer.bullets ?? [];
+const acceptLabel = disclaimer.acceptButtonLabel ?? 'I Agree';
 ---
 
 <div
@@ -10,32 +20,20 @@
 >
 	<div class="max-w-lg w-full bg-white rounded-lg shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
 		<div class="p-6 md:p-8">
-			<h2 id="disclaimer-title" class="font-display text-2xl font-semibold text-brand-navy mb-4">Disclaimer</h2>
+			<h2 id="disclaimer-title" class="font-display text-2xl font-semibold text-brand-navy mb-4">{title}</h2>
 			<ul class="list-disc pl-5 space-y-3 text-slate-700 text-sm leading-relaxed">
-				<li>
-					Bar Council rules prohibit solicitation and advertising. By using this website you confirm that you sought this
-					information on your own initiative and that you have not been induced by the firm or its members.
-				</li>
-				<li>
-					Content is for general information only and does not constitute legal advice. No attorney–client relationship
-					is created by your use of this site.
-				</li>
-				<li>
-					The firm is not liable for actions taken in reliance on this site. You should seek independent legal advice for
-					your specific situation.
-				</li>
-				<li>Website content is the intellectual property of C&amp;S Partners.</li>
-				<li>
-					By clicking <strong>I Agree</strong> or continuing to use the site, you confirm that you have read and understood
-					this disclaimer.
-				</li>
+				{
+					bullets.map((item) => (
+						<li>{item.text}</li>
+					))
+				}
 			</ul>
 			<button
 				type="button"
 				id="disclaimer-accept"
 				class="mt-6 w-full rounded-md bg-brand-gold px-4 py-3 text-brand-navy font-semibold hover:bg-brand-gold-light transition-colors"
 			>
-				I Agree
+				{acceptLabel}
 			</button>
 		</div>
 	</div>

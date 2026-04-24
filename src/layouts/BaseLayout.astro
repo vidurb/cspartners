@@ -1,8 +1,13 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
+import BotIdInit from '../components/BotIdInit.astro';
 import DisclaimerPopup from '../components/DisclaimerPopup.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { layoutSingletonsBundleQuery } from '../lib/sanity/queries';
+import { mergeLayoutSingletonsBundle } from '../lib/sanity/mergeContent';
+import type { LayoutSingletonsBundle } from '../lib/sanity/types';
+import { sanityClient } from 'sanity:client';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -13,19 +18,23 @@ interface Props {
 }
 
 const { title, description, image, mainClass = '' } = Astro.props;
+
+const rawLayout = await sanityClient.fetch<LayoutSingletonsBundle>(layoutSingletonsBundleQuery);
+const { site, disclaimer } = mergeLayoutSingletonsBundle(rawLayout);
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
-		<BaseHead title={title} description={description} image={image} />
+		<BaseHead title={title} description={description} image={image} siteTitle={site.siteTitle} />
 	</head>
 	<body class="min-h-screen flex flex-col bg-brand-cream text-slate-800">
-		<DisclaimerPopup />
-		<Header />
+		<BotIdInit />
+		<DisclaimerPopup disclaimer={disclaimer} />
+		<Header site={site} />
 		<main class:list={['flex-1 w-full', mainClass]}>
 			<slot />
 		</main>
-		<Footer />
+		<Footer site={site} />
 	</body>
 </html>

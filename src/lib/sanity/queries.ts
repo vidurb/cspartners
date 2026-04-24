@@ -73,5 +73,149 @@ export const teamMembersListQuery = /* groq */ `
 export const countsByTypeQuery = /* groq */ `{
   "blogPost": count(*[_type == "blogPost"]),
   "practiceArea": count(*[_type == "practiceArea"]),
-  "teamMember": count(*[_type == "teamMember"])
+  "teamMember": count(*[_type == "teamMember"]),
+  "jobPage": count(*[_type == "jobPage"])
 }`;
+
+/** Lightweight fetch for RSS, blog cards, and page titles where full layout bundle isn’t needed. */
+export const siteSettingsCompactQuery = /* groq */ `
+  *[_id == "siteSettings"][0]{
+    siteTitle,
+    siteDescription,
+    contactEmail,
+    offices[]{ label, street, city, phone, mapEmbedUrl, mapIframeTitle },
+    blogAuthorFallback,
+    blogReadMoreLabel,
+    practiceAreaCtaLabel
+  }
+`;
+
+export const contactFormSettingsQuery = /* groq */ `
+  *[_id == "contactFormSettings"][0]{
+    _id,
+    intro,
+    nameLabel,
+    namePlaceholder,
+    mobileLabel,
+    mobilePlaceholder,
+    emailLabel,
+    emailPlaceholder,
+    messageLabel,
+    messagePlaceholder,
+    submitLabel,
+    footnote
+  }
+`;
+
+export const layoutSingletonsBundleQuery = /* groq */ `{
+  "site": *[_id == "siteSettings"][0]{
+    _id,
+    siteTitle,
+    siteDescription,
+    navLinks[]{ label, href },
+    contactEmail,
+    offices[]{ label, street, city, phone, mapEmbedUrl, mapIframeTitle },
+    footerTagline,
+    footerNavigateHeading,
+    footerOfficesHeading,
+    footerContactHeading,
+    headerHomeAriaLabel,
+    mobileMenuHomeLabel,
+    blogAuthorFallback,
+    blogReadMoreLabel,
+    practiceAreaCtaLabel
+  },
+  "disclaimer": *[_id == "disclaimerSettings"][0]{
+    _id,
+    title,
+    bullets[]{ text },
+    acceptButtonLabel
+  },
+  "contactForm": *[_id == "contactFormSettings"][0]{
+    _id,
+    intro,
+    nameLabel,
+    namePlaceholder,
+    mobileLabel,
+    mobilePlaceholder,
+    emailLabel,
+    emailPlaceholder,
+    messageLabel,
+    messagePlaceholder,
+    submitLabel,
+    footnote
+  }
+}`;
+
+export const homePageQuery = /* groq */ `
+  *[_id == "homePage"][0]{
+    _id,
+    heroTitle,
+    heroSubtitle,
+    heroCtaLabel,
+    heroCtaHref,
+    founderHeading,
+    founderBody,
+    founderSignature,
+    founderCtaLabel,
+    founderCtaHref,
+    "founderImage": founderImage ${imageProjection},
+    practiceAreasHeading,
+    practiceAreasIntro,
+    practiceAreasViewAllLabel,
+    teamHeading,
+    teamMeetFullLabel,
+    blogsHeading,
+    blogsAllArticlesLabel,
+    contactSectionHeading
+  }
+`;
+
+export const aboutPageQuery = /* groq */ `
+  *[_id == "aboutPage"][0]{
+    _id,
+    sections[]{ heading, body },
+    practiceAreasCtaLabel,
+    practiceAreasCtaHref,
+    contactSectionHeading
+  }
+`;
+
+export const contactPageQuery = /* groq */ `
+  *[_id == "contactPage"][0]{
+    _id,
+    heroTitle,
+    heroSubtitle,
+    emailSectionHeading,
+    contactFormSectionHeading,
+    internshipsHeading,
+    internshipsBody,
+    internshipsCtaLabel,
+    internshipsCtaHref
+  }
+`;
+
+export const jobPagesListQuery = /* groq */ `
+  *[_type == "jobPage" && defined(slug.current) && published != false] | order(sortOrder asc, title asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    published,
+    sortOrder
+  }
+`;
+
+export const jobPageBySlugQuery = /* groq */ `
+  *[_type == "jobPage" && slug.current == $slug && published != false][0]{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    published,
+    sortOrder,
+    body,
+    howToApplyHeading,
+    howToApplyBody
+  }
+`;

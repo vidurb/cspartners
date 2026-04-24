@@ -1,9 +1,10 @@
 ---
 import { sanityClient } from 'sanity:client';
 import BlogPost from '../../layouts/BlogPost.astro';
-import { blogPostBySlugQuery, blogPostsListQuery } from '../../lib/sanity/queries';
-import type { BlogPostDetail, BlogPostListItem } from '../../lib/sanity/types';
+import { blogPostBySlugQuery, blogPostsListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { BlogPostDetail, BlogPostListItem, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
 export async function getStaticPaths() {
 	const posts = await sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery);
@@ -17,13 +18,19 @@ if (!slug || Array.isArray(slug)) {
 	return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
-const post = await sanityClient.fetch<BlogPostDetail | null>(blogPostBySlugQuery, { slug });
+const [siteRaw, post] = await Promise.all([
+	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	sanityClient.fetch<BlogPostDetail | null>(blogPostBySlugQuery, { slug }),
+]);
+
+const site = mergeSiteSettings(siteRaw);
 
 if (!post) {
 	return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
 const heroImageUrl = resolveImageUrl(post.heroImage, 1200);
+const author = post.author?.trim() || site.blogAuthorFallback || site.siteTitle;
 ---
 
 <BlogPost
@@ -31,7 +38,8 @@ const heroImageUrl = resolveImageUrl(post.heroImage, 1200);
 	description={post.description}
 	pubDate={new Date(post.publishedAt)}
 	updatedDate={post.updatedAt ? new Date(post.updatedAt) : undefined}
-	author={post.author ?? 'C&S Partners'}
+	author={author}
 	heroImageUrl={heroImageUrl}
 	body={post.body}
+	siteTitle={site.siteTitle}
 />

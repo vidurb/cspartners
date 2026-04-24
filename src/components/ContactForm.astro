@@ -1,51 +1,78 @@
 ---
+import { contactFormSettingsQuery } from '../lib/sanity/queries';
+import { mergeContactFormSettings } from '../lib/sanity/mergeContent';
+import type { ContactFormSettingsDoc } from '../lib/sanity/types';
+import { sanityClient } from 'sanity:client';
+
 interface Props {
 	idSuffix?: string;
 	variant?: 'light' | 'dark';
+	/** When provided, skips Sanity fetch (e.g. if parent already loaded settings). */
+	settings?: ContactFormSettingsDoc;
 }
 
-const { idSuffix = 'default', variant = 'light' } = Astro.props;
+const { idSuffix = 'default', variant = 'light', settings: settingsProp } = Astro.props;
+const raw = settingsProp ? null : await sanityClient.fetch<ContactFormSettingsDoc | null>(contactFormSettingsQuery);
+const form = mergeContactFormSettings(settingsProp ?? raw);
+
 const nameId = `contact-name-${idSuffix}`;
 const mobileId = `contact-mobile-${idSuffix}`;
 const emailId = `contact-email-${idSuffix}`;
 const messageId = `contact-message-${idSuffix}`;
 const isDark = variant === 'dark';
+const formId = `contact-form-${idSuffix}`;
+const statusId = `contact-form-status-${idSuffix}`;
 ---
 
-<form class:list={['space-y-4 max-w-xl mx-auto text-left', isDark && 'text-slate-200']} action="#" method="post">
+<form
+	id={formId}
+	data-contact-form
+	class:list={['space-y-4 max-w-xl mx-auto text-left', isDark && 'text-slate-200']}
+	method="post"
+	action="#"
+>
 	<p
 		class:list={[
 			'text-sm text-center mb-6',
 			isDark ? 'text-slate-300' : 'text-slate-600',
 		]}
 	>
-		We welcome your inquiries. If you require additional information, have a legal query, or wish to engage our services,
-		please use this form. You may also reach us by telephone or email. A member of our team will respond promptly.
+		{form.intro}
 	</p>
+	<p
+		id={statusId}
+		data-contact-status
+		role="status"
+		aria-live="polite"
+		class:list={[
+			'hidden rounded-md px-3 py-2 text-sm text-center',
+			isDark ? 'bg-slate-800 text-slate-100' : 'bg-slate-100 text-slate-800',
+		]}
+	></p>
 	<div class="grid sm:grid-cols-2 gap-4">
 		<div>
 			<label for={nameId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-				Name
+				{form.nameLabel}
 			</label>
 			<input
 				id={nameId}
 				name="name"
 				type="text"
 				autocomplete="name"
-				placeholder="Name"
+				placeholder={form.namePlaceholder ?? ''}
 				class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
 			/>
 		</div>
 		<div>
 			<label for={mobileId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-				Mobile number
+				{form.mobileLabel}
 			</label>
 			<input
 				id={mobileId}
 				name="mobile"
 				type="tel"
 				autocomplete="tel"
-				placeholder="Mobile number"
+				placeholder={form.mobilePlaceholder ?? ''}
 				required
 				class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
 			/>
@@ -53,37 +80,110 @@ const isDark = variant === 'dark';
 	</div>
 	<div>
 		<label for={emailId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-			Email
+			{form.emailLabel}
 		</label>
 		<input
 			id={emailId}
 			name="email"
 			type="email"
 			autocomplete="email"
-			placeholder="Email"
+			placeholder={form.emailPlaceholder ?? ''}
 			required
 			class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
 		/>
 	</div>
 	<div>
 		<label for={messageId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-			Message
+			{form.messageLabel}
 		</label>
 		<textarea
 			id={messageId}
 			name="message"
 			rows="4"
-			placeholder="Message"
+			placeholder={form.messagePlaceholder ?? ''}
 			class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none resize-y"
 		></textarea>
 	</div>
 	<button
 		type="submit"
-		class="w-full rounded-md bg-brand-gold px-4 py-3 font-semibold text-brand-navy hover:bg-brand-gold-light transition-colors"
+		data-contact-submit
+		class="w-full rounded-md bg-brand-gold px-4 py-3 font-semibold text-brand-navy hover:bg-brand-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
 	>
-		Send
+		{form.submitLabel}
 	</button>
 	<p class:list={['text-xs text-center', isDark ? 'text-slate-400' : 'text-slate-500']}>
-		This form is not yet connected to a server — submissions are for layout only.
+		{form.footnote}
 	</p>
 </form>
+
+<script>
+	import { actions, isInputError } from 'astro:actions';
+
+	function wireContactForm(form: HTMLFormElement) {
+		const statusEl = form.querySelector('[data-contact-status]');
+		const submitBtn = form.querySelector('[data-contact-submit]');
+
+		if (!(statusEl instanceof HTMLElement)) return;
+
+		const showStatus = (message: string, isError: boolean) => {
+			statusEl.textContent = message;
+			statusEl.classList.remove('hidden');
+			statusEl.classList.toggle('ring-2', isError);
+			statusEl.classList.toggle('ring-red-400', isError);
+			statusEl.classList.toggle('ring-emerald-600/40', !isError);
+		};
+
+		const hideStatus = () => {
+			statusEl.textContent = '';
+			statusEl.classList.add('hidden');
+			statusEl.classList.remove('ring-2', 'ring-red-400', 'ring-emerald-600/40');
+		};
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			hideStatus();
+
+			if (!form.reportValidity()) return;
+
+			const fd = new FormData(form);
+			if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = true;
+			form.setAttribute('aria-busy', 'true');
+
+			try {
+				const { data, error } = await actions.contact(fd);
+
+				if (error) {
+					if (isInputError(error)) {
+						const lines = Object.entries(error.fields).flatMap(([key, msgs]) =>
+							msgs && msgs.length ? [`${key}: ${msgs.join(', ')}`] : [],
+						);
+						showStatus(
+							lines.length ? lines.join(' ') : 'Please check the form and try again.',
+							true,
+						);
+					} else {
+						showStatus(error.message || 'Something went wrong. Please try again.', true);
+					}
+					return;
+				}
+
+				if (data && data.ok) {
+					showStatus('Thank you — your message has been sent. We will be in touch shortly.', false);
+					form.reset();
+				}
+			} catch {
+				showStatus('Something went wrong. Please try again later.', true);
+			} finally {
+				form.removeAttribute('aria-busy');
+				if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = false;
+			}
+		});
+	}
+
+	for (const el of document.querySelectorAll('[data-contact-form]:not([data-contact-wired])')) {
+		if (el instanceof HTMLFormElement) {
+			el.setAttribute('data-contact-wired', '');
+			wireContactForm(el);
+		}
+	}
+</script>

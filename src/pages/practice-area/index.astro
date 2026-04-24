@@ -4,16 +4,21 @@ import ContactForm from '../../components/ContactForm.astro';
 import Hero from '../../components/Hero.astro';
 import PracticeAreaCard from '../../components/PracticeAreaCard.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-import { practiceAreasListQuery } from '../../lib/sanity/queries';
-import type { PracticeAreaListItem } from '../../lib/sanity/types';
+import { practiceAreasListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { PracticeAreaListItem, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
-const practiceRaw = await sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery);
+const [siteRaw, practiceRaw] = await Promise.all([
+	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery),
+]);
+
+const site = mergeSiteSettings(siteRaw);
 const practiceAreas = practiceRaw.sort((a, b) => a.order - b.order);
 ---
 
-<BaseLayout title={`Practice Areas — ${SITE_TITLE}`} description={SITE_DESCRIPTION}>
+<BaseLayout title={`Practice Areas — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
 	<Hero title="Our Practice Areas" variant="dark" />
 	<div class="max-w-6xl mx-auto px-4 py-16">
 		<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
