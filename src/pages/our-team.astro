@@ -8,6 +8,7 @@ import { siteSettingsCompactQuery, teamMembersListQuery } from '../lib/sanity/qu
 import type { SiteSettingsDoc, TeamMemberDoc } from '../lib/sanity/types';
 import { resolveImageUrl } from '../lib/sanity/imageUrl';
 import { mergeSiteSettings } from '../lib/sanity/mergeContent';
+import { sortTeamMembersForListing } from '../lib/sanity/teamMemberSort';
 
 const [siteRaw, teamMembersRaw] = await Promise.all([
 	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
@@ -15,7 +16,8 @@ const [siteRaw, teamMembersRaw] = await Promise.all([
 ]);
 
 const site = mergeSiteSettings(siteRaw);
-const teamMembers = teamMembersRaw.map((m) => ({
+const teamMembersSorted = [...teamMembersRaw].sort(sortTeamMembersForListing);
+const teamMembers = teamMembersSorted.map((m) => ({
 	name: m.name,
 	role: m.role,
 	photoUrl: resolveImageUrl(m.photo, 400) ?? '',

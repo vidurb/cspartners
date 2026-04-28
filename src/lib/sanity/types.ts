@@ -32,12 +32,23 @@ export type PracticeAreaDetail = PracticeAreaListItem & {
 	body?: PortableTextBlock[] | null;
 };
 
+/** Must stay in sync with Sanity `teamMember.role` options. */
+export const TEAM_MEMBER_ROLE_VALUES = [
+	'Associate',
+	'Senior Associate',
+	'Managing Associate',
+	'Partner',
+	'Of-Counsel',
+	'Senior Partner',
+] as const;
+
+export type TeamMemberRole = (typeof TEAM_MEMBER_ROLE_VALUES)[number];
+
 export type TeamMemberDoc = {
 	_id: string;
 	name: string;
 	slug: string;
-	role: string;
-	sortOrder: number;
+	role: TeamMemberRole;
 	photo?: SanityImageAsset | null;
 	profilePdf?: string | null;
 };

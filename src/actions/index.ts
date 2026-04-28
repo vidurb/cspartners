@@ -19,6 +19,10 @@ export const server = {
 			mobile: z.string().min(1).max(50),
 			email: z.email(),
 			message: z.string().max(10000).nullable().optional(),
+			source: z
+				.string()
+				.optional()
+				.transform((s) => (s === 'internship' ? ('internship' as const) : undefined)),
 		}),
 		handler: async (input, context) => {
 			try {
@@ -62,16 +66,24 @@ export const server = {
 
 			const name = (input.name ?? '').trim() || '(no name)';
 			const message = (input.message ?? '').trim() || '(no message)';
+			const source = input.source === 'internship' ? 'internship' : 'contact';
+			const subject =
+				source === 'internship' ? `Internship inquiry: ${name}` : `Website contact: ${name}`;
 
 			const resend = new Resend(apiKey);
 			const { error } = await resend.emails.send({
 				from: from.trim(),
 				to: [to.trim()],
 				replyTo: input.email,
-				subject: `Website contact: ${name}`,
-				text: [`Name: ${name}`, `Email: ${input.email}`, `Mobile: ${input.mobile}`, '', message].join(
-					'\n',
-				),
+				subject,
+				text: [
+					`Source: ${source}`,
+					`Name: ${name}`,
+					`Email: ${input.email}`,
+					`Mobile: ${input.mobile}`,
+					'',
+					message,
+				].join('\n'),
 			});
 
 			if (error) {

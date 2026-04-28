@@ -59,12 +59,11 @@ export const practiceAreaBySlugQuery = /* groq */ `
 `;
 
 export const teamMembersListQuery = /* groq */ `
-  *[_type == "teamMember" && defined(slug.current)] | order(sortOrder asc) {
+  *[_type == "teamMember" && defined(slug.current)] | order(name asc) {
     _id,
     name,
     "slug": slug.current,
     role,
-    sortOrder,
     profilePdf,
     "photo": photo ${imageProjection}
   }

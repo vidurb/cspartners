@@ -17,6 +17,10 @@ import {
 import type { BlogPostListItem, HomePageDoc, PracticeAreaListItem, SiteSettingsDoc, TeamMemberDoc } from '../lib/sanity/types';
 import { resolveImageUrl } from '../lib/sanity/imageUrl';
 import { mergeHomePage, mergeSiteSettings } from '../lib/sanity/mergeContent';
+import {
+	isHomepageTeamCarouselRole,
+	sortTeamMembersForHomeCarousel,
+} from '../lib/sanity/teamMemberSort';
 
 const [siteRaw, homeRaw, practiceRaw, posts, teamMembersRaw] = await Promise.all([
 	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
@@ -31,10 +35,9 @@ const home = mergeHomePage(homeRaw);
 
 const practiceAreas = practiceRaw.sort((a, b) => a.order - b.order);
 const sortedPosts = posts.sort((a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf());
-const latestPosts = sortedPosts.slice(0, 3);
 const teamPreview = teamMembersRaw
-	.sort((a, b) => a.sortOrder - b.sortOrder)
-	.slice(0, 8)
+	.filter((m) => isHomepageTeamCarouselRole(m.role))
+	.sort(sortTeamMembersForHomeCarousel)
 	.map((m) => ({
 		name: m.name,
 		role: m.role,
@@ -122,29 +125,38 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 	<section class="py-16 px-4 bg-white">
 		<div class="max-w-6xl mx-auto">
 			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">{home.teamHeading}</h2>
-			<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-				{
-					teamPreview.map((m) => (
-						<a href="/our-team" class="group text-center">
-							<div class="aspect-square rounded-full overflow-hidden mb-3 ring-2 ring-transparent group-hover:ring-brand-gold/40 transition-all">
-								{m.photoUrl ? (
-									<img
-										src={m.photoUrl}
-										alt=""
-										class="w-full h-full object-cover"
-										width="200"
-										height="200"
-										loading="lazy"
-									/>
-								) : (
-									<div class="w-full h-full bg-slate-200" />
-								)}
-							</div>
-							<p class="font-semibold text-brand-navy text-sm group-hover:text-brand-gold">{m.name}</p>
-							<p class="text-xs text-slate-600">{m.role}</p>
-						</a>
-					))
-				}
+			<div class="-mx-4 px-4 md:mx-0 md:px-0">
+				<div
+					class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:thin] md:[scrollbar-gutter:stable]"
+					role="region"
+					aria-label="Team members"
+				>
+					{
+						teamPreview.map((m) => (
+							<a
+								href="/our-team"
+								class="group text-center shrink-0 w-[45%] min-w-[10rem] max-w-[12rem] sm:w-[40%] md:w-[calc(25%-1.125rem)] snap-start"
+							>
+								<div class="aspect-square rounded-full overflow-hidden mb-3 ring-2 ring-transparent group-hover:ring-brand-gold/40 transition-all">
+									{m.photoUrl ? (
+										<img
+											src={m.photoUrl}
+											alt=""
+											class="w-full h-full object-cover"
+											width="200"
+											height="200"
+											loading="lazy"
+										/>
+									) : (
+										<div class="w-full h-full bg-slate-200" />
+									)}
+								</div>
+								<p class="font-semibold text-brand-navy text-sm group-hover:text-brand-gold">{m.name}</p>
+								<p class="text-xs text-slate-600">{m.role}</p>
+							</a>
+						))
+					}
+				</div>
 			</div>
 			<p class="text-center mt-10">
 				<a href="/our-team" class="font-semibold text-brand-gold hover:text-brand-gold-light">{home.teamMeetFullLabel}</a>
@@ -155,19 +167,27 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 	<section class="py-16 px-4 bg-brand-paper">
 		<div class="max-w-6xl mx-auto">
 			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">{home.blogsHeading}</h2>
-			<div class="grid md:grid-cols-3 gap-8">
-				{
-					latestPosts.map((post) => (
-						<BlogCard
-							title={post.title}
-							description={post.description}
-							href={`/blog/${post.slug}/`}
-							pubDate={new Date(post.publishedAt)}
-							heroImageUrl={resolveImageUrl(post.heroImage, 800)}
-							readMoreLabel={readMore}
-						/>
-					))
-				}
+			<div class="-mx-4 px-4 md:mx-0 md:px-0">
+				<div
+					class="flex gap-8 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:thin] md:[scrollbar-gutter:stable]"
+					role="region"
+					aria-label="Blog posts"
+				>
+					{
+						sortedPosts.map((post) => (
+							<div class="shrink-0 w-[min(100%,22rem)] md:w-[min(100%,20rem)] lg:w-[calc(33.333%-1.334rem)] snap-start min-w-[16rem]">
+								<BlogCard
+									title={post.title}
+									description={post.description}
+									href={`/blog/${post.slug}/`}
+									pubDate={new Date(post.publishedAt)}
+									heroImageUrl={resolveImageUrl(post.heroImage, 800)}
+									readMoreLabel={readMore}
+								/>
+							</div>
+						))
+					}
+				</div>
 			</div>
 			<p class="text-center mt-10">
 				<a href="/blog" class="font-semibold text-brand-gold hover:text-brand-gold-light">{home.blogsAllArticlesLabel}</a>

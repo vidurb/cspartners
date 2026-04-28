@@ -9,9 +9,16 @@ interface Props {
 	variant?: 'light' | 'dark';
 	/** When provided, skips Sanity fetch (e.g. if parent already loaded settings). */
 	settings?: ContactFormSettingsDoc;
+	/** When `internship`, submission is tagged for distinct email subject/body. */
+	source?: 'contact' | 'internship';
 }
 
-const { idSuffix = 'default', variant = 'light', settings: settingsProp } = Astro.props;
+const {
+	idSuffix = 'default',
+	variant = 'light',
+	settings: settingsProp,
+	source = 'contact',
+} = Astro.props;
 const raw = settingsProp ? null : await sanityClient.fetch<ContactFormSettingsDoc | null>(contactFormSettingsQuery);
 const form = mergeContactFormSettings(settingsProp ?? raw);
 
@@ -31,6 +38,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 	method="post"
 	action="#"
 >
+	{source === 'internship' ? <input type="hidden" name="source" value="internship" /> : null}
 	<p
 		class:list={[
 			'text-sm text-center mb-6',

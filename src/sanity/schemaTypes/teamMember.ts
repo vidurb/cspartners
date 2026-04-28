@@ -1,5 +1,14 @@
 import { defineField, defineType } from 'sanity';
 
+const ROLE_OPTIONS = [
+	{ title: 'Associate', value: 'Associate' },
+	{ title: 'Senior Associate', value: 'Senior Associate' },
+	{ title: 'Managing Associate', value: 'Managing Associate' },
+	{ title: 'Partner', value: 'Partner' },
+	{ title: 'Of-Counsel', value: 'Of-Counsel' },
+	{ title: 'Senior Partner', value: 'Senior Partner' },
+] as const;
+
 export default defineType({
 	name: 'teamMember',
 	title: 'Team member',
@@ -22,6 +31,10 @@ export default defineType({
 			name: 'role',
 			title: 'Role',
 			type: 'string',
+			options: {
+				list: [...ROLE_OPTIONS],
+				layout: 'dropdown',
+			},
 			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
@@ -35,13 +48,6 @@ export default defineType({
 			name: 'profilePdf',
 			title: 'Profile PDF URL',
 			type: 'url',
-		}),
-		defineField({
-			name: 'sortOrder',
-			title: 'Sort order',
-			type: 'number',
-			description: 'Lower numbers appear first',
-			validation: (Rule) => Rule.required().integer(),
 		}),
 	],
 	preview: {
