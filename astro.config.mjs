@@ -11,7 +11,7 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://cspartners.in',
-	output: 'static',
+	output: 'server',
 	adapter: vercel({
 		imageService: true,
 	}),
@@ -23,6 +23,9 @@ export default defineConfig({
 			apiVersion: 'v2026-04-22',
 			studioBasePath: '/admin',
 			studioRouterHistory: 'hash',
+			stega: {
+				studioUrl: '/admin',
+			},
 		}),
 		react(),
 		mdx(),

@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '../lib/sanity/loadQuery';
 import BlogCard from '../components/BlogCard.astro';
 import ContactForm from '../components/ContactForm.astro';
 import PortableTextBody from '../components/PortableTextBody.astro';
@@ -19,11 +19,11 @@ import { resolveImageUrl } from '../lib/sanity/imageUrl';
 import { mergeHomePage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
 const [siteRaw, homeRaw, practiceRaw, posts, teamMembersRaw] = await Promise.all([
-	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
-	sanityClient.fetch<Partial<HomePageDoc> | null>(homePageQuery),
-	sanityClient.fetch<PracticeAreaListItem[]>(practiceAreasListQuery),
-	sanityClient.fetch<BlogPostListItem[]>(blogPostsListQuery),
-	sanityClient.fetch<TeamMemberDoc[]>(teamMembersListQuery),
+	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	loadQuery<Partial<HomePageDoc> | null>(homePageQuery),
+	loadQuery<PracticeAreaListItem[]>(practiceAreasListQuery),
+	loadQuery<BlogPostListItem[]>(blogPostsListQuery),
+	loadQuery<TeamMemberDoc[]>(teamMembersListQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);

@@ -1,5 +1,5 @@
 ---
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '../lib/sanity/loadQuery';
 import ContactForm from '../components/ContactForm.astro';
 import Hero from '../components/Hero.astro';
 import TeamMember from '../components/TeamMember.astro';
@@ -10,8 +10,8 @@ import { resolveImageUrl } from '../lib/sanity/imageUrl';
 import { mergeSiteSettings } from '../lib/sanity/mergeContent';
 
 const [siteRaw, teamMembersRaw] = await Promise.all([
-	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
-	sanityClient.fetch<TeamMemberDoc[]>(teamMembersListQuery),
+	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	loadQuery<TeamMemberDoc[]>(teamMembersListQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);

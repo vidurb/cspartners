@@ -2,18 +2,11 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/Hero.astro';
 import PortableTextBody from '../../components/PortableTextBody.astro';
-import { jobPageBySlugQuery, jobPagesListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
-import type { JobPageDetail, JobPageListItem, SiteSettingsDoc } from '../../lib/sanity/types';
-import { sanityClient } from 'sanity:client';
+import { jobPageBySlugQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { JobPageDetail, SiteSettingsDoc } from '../../lib/sanity/types';
+import { loadQuery } from '../../lib/sanity/loadQuery';
 import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 import { DEFAULT_INTERNSHIP_JOB } from '../../lib/sanity/fallbacks';
-
-export async function getStaticPaths() {
-	const jobs = await sanityClient.fetch<JobPageListItem[]>(jobPagesListQuery);
-	const slugSet = new Set(jobs.map((j) => j.slug));
-	slugSet.add('internship');
-	return [...slugSet].map((s) => ({ params: { slug: s } }));
-}
 
 const slug = Astro.params.slug;
 if (!slug || Array.isArray(slug)) {
@@ -21,8 +14,8 @@ if (!slug || Array.isArray(slug)) {
 }
 
 const [siteRaw, jobRaw] = await Promise.all([
-	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
-	sanityClient.fetch<JobPageDetail | null>(jobPageBySlugQuery, { slug }),
+	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	loadQuery<JobPageDetail | null>(jobPageBySlugQuery, { slug }),
 ]);
 
 const site = mergeSiteSettings(siteRaw);
