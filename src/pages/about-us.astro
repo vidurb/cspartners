@@ -9,13 +9,13 @@ import {
 	siteSettingsCompactQuery,
 } from '../lib/sanity/queries';
 import type { AboutPageDoc, ContactFormSettingsDoc, SiteSettingsDoc } from '../lib/sanity/types';
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '../lib/sanity/loadQuery';
 import { mergeAboutPage, mergeContactFormSettings, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
 const [siteRaw, aboutRaw, contactFormRaw] = await Promise.all([
-	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
-	sanityClient.fetch<Partial<AboutPageDoc> | null>(aboutPageQuery),
-	sanityClient.fetch<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
+	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	loadQuery<Partial<AboutPageDoc> | null>(aboutPageQuery),
+	loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);

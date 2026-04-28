@@ -2,7 +2,7 @@
 import { contactFormSettingsQuery } from '../lib/sanity/queries';
 import { mergeContactFormSettings } from '../lib/sanity/mergeContent';
 import type { ContactFormSettingsDoc } from '../lib/sanity/types';
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '../lib/sanity/loadQuery';
 
 interface Props {
 	idSuffix?: string;
@@ -19,7 +19,7 @@ const {
 	settings: settingsProp,
 	source = 'contact',
 } = Astro.props;
-const raw = settingsProp ? null : await sanityClient.fetch<ContactFormSettingsDoc | null>(contactFormSettingsQuery);
+const raw = settingsProp ? null : await loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery);
 const form = mergeContactFormSettings(settingsProp ?? raw);
 
 const nameId = `contact-name-${idSuffix}`;

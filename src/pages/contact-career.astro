@@ -4,13 +4,13 @@ import Hero from '../components/Hero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { contactFormSettingsQuery, contactPageQuery, siteSettingsCompactQuery } from '../lib/sanity/queries';
 import type { ContactFormSettingsDoc, ContactPageDoc, SiteSettingsDoc } from '../lib/sanity/types';
-import { sanityClient } from 'sanity:client';
+import { loadQuery } from '../lib/sanity/loadQuery';
 import { mergeContactFormSettings, mergeContactPage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
 const [siteRaw, contactPageRaw, contactFormRaw] = await Promise.all([
-	sanityClient.fetch<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
-	sanityClient.fetch<Partial<ContactPageDoc> | null>(contactPageQuery),
-	sanityClient.fetch<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
+	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	loadQuery<Partial<ContactPageDoc> | null>(contactPageQuery),
+	loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);
