@@ -1,11 +1,10 @@
 import { defineConfig } from 'sanity';
 import { defineLocations, presentationTool } from 'sanity/presentation';
 import { structureTool } from 'sanity/structure';
-import { visionTool } from '@sanity/vision';
 import { deskStructure } from './src/sanity/deskStructure';
 import { schemaTypes } from './src/sanity/schemaTypes';
 
-const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:4321';
+const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL ?? 'http://localhost:4321';
 
 const singletonLocation = (title: string, href: string) =>
 	defineLocations({
@@ -74,7 +73,6 @@ export default defineConfig({
 			},
 		}),
 		structureTool({ structure: deskStructure }),
-		visionTool(),
 	],
 	schema: {
 		types: schemaTypes,
