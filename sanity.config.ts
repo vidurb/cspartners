@@ -5,6 +5,14 @@ import { deskStructure } from './src/sanity/deskStructure';
 import { schemaTypes } from './src/sanity/schemaTypes';
 
 
+const withHttps = (url: string) => (url.startsWith('http') ? url : `https://${url}`);
+
+const previewUrl = process.env.VERCEL_URL
+	? withHttps(process.env.VERCEL_URL)
+	: process.env.VERCEL_PROJECT_PRODUCTION_URL
+		? withHttps(process.env.VERCEL_PROJECT_PRODUCTION_URL)
+		: 'http://localhost:4321';
+
 const singletonLocation = (title: string, href: string) =>
 	defineLocations({
 		locations: [{ title, href }],
@@ -18,7 +26,7 @@ export default defineConfig({
 	plugins: [
 		presentationTool({
 			previewUrl: {
-				initial: process.env.VERCEL === '1' ? `https://${process.env.VERCEL_URL}` : 'http://localhost:4321',
+				initial: previewUrl,
 			},
 			resolve: {
 				locations: {
