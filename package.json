@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "sanity:deploy": "sanity deploy --yes",
     "sanity:import": "tsx scripts/sanity/import-content.ts",
     "sanity:import:dry": "tsx scripts/sanity/import-content.ts --dry-run",
     "sanity:import:verify": "tsx scripts/sanity/import-content.ts --verify",
