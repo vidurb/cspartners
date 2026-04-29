@@ -7,11 +7,9 @@ import { schemaTypes } from './src/sanity/schemaTypes';
 
 const withHttps = (url: string) => (url.startsWith('http') ? url : `https://${url}`);
 
-const previewUrl = process.env.VERCEL_URL
-	? withHttps(process.env.VERCEL_URL)
-	: process.env.VERCEL_PROJECT_PRODUCTION_URL
-		? withHttps(process.env.VERCEL_PROJECT_PRODUCTION_URL)
-		: 'http://localhost:4321';
+const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL
+	? withHttps(process.env.SANITY_STUDIO_PREVIEW_URL)
+	: 'https://cspartners.vercel.app';
 
 const singletonLocation = (title: string, href: string) =>
 	defineLocations({
