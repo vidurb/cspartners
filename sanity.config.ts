@@ -9,7 +9,7 @@ const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL || 'http://localhost:43
 
 const singletonLocation = (title: string, href: string) =>
 	defineLocations({
-		resolve: () => ({ locations: [{ title, href }] }),
+		locations: [{ title, href }],
 	});
 
 export default defineConfig({
