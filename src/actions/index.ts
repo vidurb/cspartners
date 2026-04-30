@@ -21,6 +21,7 @@ export const server = {
 			message: z.string().max(10000).nullable().optional(),
 			source: z
 				.string()
+				.nullable()
 				.optional()
 				.transform((s) => (s === 'internship' ? ('internship' as const) : undefined)),
 		}),
