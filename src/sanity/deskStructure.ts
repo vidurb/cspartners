@@ -7,7 +7,6 @@ const SINGLETONS: { schemaType: string; documentId: string; title: string }[] = 
 	{ schemaType: 'aboutPage', documentId: 'aboutPage', title: 'About page' },
 	{ schemaType: 'contactPage', documentId: 'contactPage', title: 'Contact & careers page' },
 	{ schemaType: 'disclaimerSettings', documentId: 'disclaimerSettings', title: 'Disclaimer popup' },
-	{ schemaType: 'contactFormSettings', documentId: 'contactFormSettings', title: 'Contact form' },
 ];
 
 function singletonListItem(

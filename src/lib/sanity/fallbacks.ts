@@ -1,7 +1,6 @@
 import type { PortableTextBlock } from '@portabletext/types';
 import type {
 	AboutPageDoc,
-	ContactFormSettingsDoc,
 	ContactPageDoc,
 	DisclaimerSettingsDoc,
 	HomePageDoc,
@@ -18,7 +17,6 @@ export const SINGLETON_IDS = {
 	aboutPage: 'aboutPage',
 	contactPage: 'contactPage',
 	disclaimerSettings: 'disclaimerSettings',
-	contactFormSettings: 'contactFormSettings',
 } as const;
 
 export const DEFAULT_NAV_LINKS: NavLink[] = [
@@ -202,21 +200,6 @@ export const DEFAULT_DISCLAIMER_SETTINGS: DisclaimerSettingsDoc = {
 		},
 	],
 	acceptButtonLabel: 'I Agree',
-};
-
-export const DEFAULT_CONTACT_FORM_SETTINGS: ContactFormSettingsDoc = {
-	_id: SINGLETON_IDS.contactFormSettings,
-	intro: 'We welcome your inquiries. If you require additional information, have a legal query, or wish to engage our services, please use this form. You may also reach us by telephone or email. A member of our team will respond promptly.',
-	nameLabel: 'Name',
-	namePlaceholder: 'Name',
-	mobileLabel: 'Mobile number',
-	mobilePlaceholder: 'Mobile number',
-	emailLabel: 'Email',
-	emailPlaceholder: 'Email',
-	messageLabel: 'Message',
-	messagePlaceholder: 'Message',
-	submitLabel: 'Send',
-	footnote: 'We respect your privacy. Your details are used only to respond to this inquiry.',
 };
 
 const internshipBodyBlocks: PortableTextBlock[] = [

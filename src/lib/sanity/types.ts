@@ -140,21 +140,6 @@ export type DisclaimerSettingsDoc = {
 	acceptButtonLabel?: string | null;
 };
 
-export type ContactFormSettingsDoc = {
-	_id?: string;
-	intro?: string | null;
-	nameLabel?: string | null;
-	namePlaceholder?: string | null;
-	mobileLabel?: string | null;
-	mobilePlaceholder?: string | null;
-	emailLabel?: string | null;
-	emailPlaceholder?: string | null;
-	messageLabel?: string | null;
-	messagePlaceholder?: string | null;
-	submitLabel?: string | null;
-	footnote?: string | null;
-};
-
 export type JobPageDetail = {
 	_id: string;
 	title: string;
@@ -179,7 +164,6 @@ export type JobPageListItem = {
 export type LayoutSingletonsBundle = {
 	site: SiteSettingsDoc | null;
 	disclaimer: DisclaimerSettingsDoc | null;
-	contactForm: ContactFormSettingsDoc | null;
 };
 
 /** After GROQ `asset->` expansion */

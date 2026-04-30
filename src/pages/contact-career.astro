@@ -2,28 +2,24 @@
 import ContactForm from '../components/ContactForm.astro';
 import Hero from '../components/Hero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { contactFormSettingsQuery, contactPageQuery, siteSettingsCompactQuery } from '../lib/sanity/queries';
-import type { ContactFormSettingsDoc, ContactPageDoc, SiteSettingsDoc } from '../lib/sanity/types';
+import { contactPageQuery, siteSettingsCompactQuery } from '../lib/sanity/queries';
+import type { ContactPageDoc, SiteSettingsDoc } from '../lib/sanity/types';
 import { loadQuery } from '../lib/sanity/loadQuery';
 import { keyedArrayFieldPath, singletonDataAttribute } from '../lib/sanity/dataAttributes';
-import { mergeContactFormSettings, mergeContactPage, mergeSiteSettings } from '../lib/sanity/mergeContent';
+import { mergeContactPage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
-const [siteRaw, contactPageRaw, contactFormRaw] = await Promise.all([
+const [siteRaw, contactPageRaw] = await Promise.all([
 	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
 	loadQuery<Partial<ContactPageDoc> | null>(contactPageQuery),
-	loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);
 const contactPage = mergeContactPage(contactPageRaw);
-const contactForm = mergeContactFormSettings(contactFormRaw);
 const offices = site.offices;
 const siteId = site._id ?? 'siteSettings';
 const contactPageId = contactPage._id ?? 'contactPage';
-const contactFormId = contactForm._id ?? 'contactFormSettings';
 const siteField = (path: string) => singletonDataAttribute('siteSettings', path, siteId);
 const contactPageField = (path: string) => singletonDataAttribute('contactPage', path, contactPageId);
-const contactFormField = (path: string) => singletonDataAttribute('contactFormSettings', path, contactFormId);
 ---
 
 <BaseLayout title={`Contact Us & Careers — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
@@ -95,20 +91,6 @@ const contactFormField = (path: string) => singletonDataAttribute('contactFormSe
 			<h2 class="font-display text-3xl font-semibold text-brand-navy mb-8" data-sanity={contactPageField('contactFormSectionHeading')}>{contactPage.contactFormSectionHeading}</h2>
 			<ContactForm
 				idSuffix="contact"
-				settings={contactForm}
-				fieldDataSanity={{
-					intro: contactFormField('intro'),
-					nameLabel: contactFormField('nameLabel'),
-					namePlaceholder: contactFormField('namePlaceholder'),
-					mobileLabel: contactFormField('mobileLabel'),
-					mobilePlaceholder: contactFormField('mobilePlaceholder'),
-					emailLabel: contactFormField('emailLabel'),
-					emailPlaceholder: contactFormField('emailPlaceholder'),
-					messageLabel: contactFormField('messageLabel'),
-					messagePlaceholder: contactFormField('messagePlaceholder'),
-					submitLabel: contactFormField('submitLabel'),
-					footnote: contactFormField('footnote'),
-				}}
 			/>
 		</div>
 	</section>

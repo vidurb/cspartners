@@ -5,27 +5,22 @@ import Hero from '../components/Hero.astro';
 import PortableTextBody from '../components/PortableTextBody.astro';
 import {
 	aboutPageQuery,
-	contactFormSettingsQuery,
 	siteSettingsCompactQuery,
 } from '../lib/sanity/queries';
-import type { AboutPageDoc, ContactFormSettingsDoc, SiteSettingsDoc } from '../lib/sanity/types';
+import type { AboutPageDoc, SiteSettingsDoc } from '../lib/sanity/types';
 import { loadQuery } from '../lib/sanity/loadQuery';
 import { keyedArrayFieldPath, singletonDataAttribute } from '../lib/sanity/dataAttributes';
-import { mergeAboutPage, mergeContactFormSettings, mergeSiteSettings } from '../lib/sanity/mergeContent';
+import { mergeAboutPage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
-const [siteRaw, aboutRaw, contactFormRaw] = await Promise.all([
+const [siteRaw, aboutRaw] = await Promise.all([
 	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
 	loadQuery<Partial<AboutPageDoc> | null>(aboutPageQuery),
-	loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);
 const about = mergeAboutPage(aboutRaw);
-const contactForm = mergeContactFormSettings(contactFormRaw);
 const aboutId = about._id ?? 'aboutPage';
-const contactFormId = contactForm._id ?? 'contactFormSettings';
 const aboutField = (path: string) => singletonDataAttribute('aboutPage', path, aboutId);
-const contactFormField = (path: string) => singletonDataAttribute('contactFormSettings', path, contactFormId);
 const founderPhotos = [
 	{
 		src: 'https://cspartners.in/wp-content/uploads/2026/02/51-image-1024x683.jpg',
@@ -105,20 +100,6 @@ const founderPhotos = [
 			<h2 class="font-display text-3xl font-semibold text-brand-navy mb-8" data-sanity={aboutField('contactSectionHeading')}>{about.contactSectionHeading}</h2>
 			<ContactForm
 				idSuffix="about"
-				settings={contactForm}
-				fieldDataSanity={{
-					intro: contactFormField('intro'),
-					nameLabel: contactFormField('nameLabel'),
-					namePlaceholder: contactFormField('namePlaceholder'),
-					mobileLabel: contactFormField('mobileLabel'),
-					mobilePlaceholder: contactFormField('mobilePlaceholder'),
-					emailLabel: contactFormField('emailLabel'),
-					emailPlaceholder: contactFormField('emailPlaceholder'),
-					messageLabel: contactFormField('messageLabel'),
-					messagePlaceholder: contactFormField('messagePlaceholder'),
-					submitLabel: contactFormField('submitLabel'),
-					footnote: contactFormField('footnote'),
-				}}
 			/>
 		</div>
 	</section>

@@ -36,10 +36,6 @@ export default defineConfig({
 						message: 'The disclaimer popup is used across all pages.',
 						tone: 'caution',
 					}),
-					contactFormSettings: defineLocations({
-						message: 'The contact form is used on multiple pages.',
-						tone: 'caution',
-					}),
 					homePage: singletonLocation('Home', '/'),
 					aboutPage: singletonLocation('About Us', '/about-us'),
 					contactPage: singletonLocation('Contact Us & Careers', '/contact-career'),

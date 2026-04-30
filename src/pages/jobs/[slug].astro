@@ -3,10 +3,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import Hero from '../../components/Hero.astro';
 import PortableTextBody from '../../components/PortableTextBody.astro';
-import { contactFormSettingsQuery, jobPageBySlugQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
-import type { ContactFormSettingsDoc, JobPageDetail, SiteSettingsDoc } from '../../lib/sanity/types';
+import { jobPageBySlugQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { JobPageDetail, SiteSettingsDoc } from '../../lib/sanity/types';
 import { loadQuery } from '../../lib/sanity/loadQuery';
-import { mergeContactFormSettings, mergeSiteSettings } from '../../lib/sanity/mergeContent';
+import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 import { DEFAULT_INTERNSHIP_JOB } from '../../lib/sanity/fallbacks';
 
 const slug = Astro.params.slug;
@@ -14,14 +14,12 @@ if (!slug || Array.isArray(slug)) {
 	return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
-const [siteRaw, jobRaw, contactFormRaw] = await Promise.all([
+const [siteRaw, jobRaw] = await Promise.all([
 	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
 	loadQuery<JobPageDetail | null>(jobPageBySlugQuery, { slug }),
-	loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery),
 ]);
 
 const site = mergeSiteSettings(siteRaw);
-const contactForm = mergeContactFormSettings(contactFormRaw);
 
 let job: JobPageDetail;
 if (jobRaw) {
@@ -57,7 +55,7 @@ if (jobRaw) {
 			<section class="py-16 px-4 bg-brand-paper">
 				<div class="max-w-3xl mx-auto text-center">
 					<h2 class="font-display text-3xl font-semibold text-brand-navy mb-8">Internship inquiries</h2>
-					<ContactForm idSuffix="internship" settings={contactForm} source="internship" />
+					<ContactForm idSuffix="internship" source="internship" />
 				</div>
 			</section>
 		)

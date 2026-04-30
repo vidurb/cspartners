@@ -91,23 +91,6 @@ export const siteSettingsCompactQuery = /* groq */ `
   }
 `;
 
-export const contactFormSettingsQuery = /* groq */ `
-  *[_id == "contactFormSettings"][0]{
-    _id,
-    intro,
-    nameLabel,
-    namePlaceholder,
-    mobileLabel,
-    mobilePlaceholder,
-    emailLabel,
-    emailPlaceholder,
-    messageLabel,
-    messagePlaceholder,
-    submitLabel,
-    footnote
-  }
-`;
-
 export const layoutSingletonsBundleQuery = /* groq */ `{
   "site": *[_id == "siteSettings"][0]{
     _id,
@@ -131,20 +114,6 @@ export const layoutSingletonsBundleQuery = /* groq */ `{
     title,
     bullets[]{ _key, text },
     acceptButtonLabel
-  },
-  "contactForm": *[_id == "contactFormSettings"][0]{
-    _id,
-    intro,
-    nameLabel,
-    namePlaceholder,
-    mobileLabel,
-    mobilePlaceholder,
-    emailLabel,
-    emailPlaceholder,
-    messageLabel,
-    messagePlaceholder,
-    submitLabel,
-    footnote
   }
 }`;
 

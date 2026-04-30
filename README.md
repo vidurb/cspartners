@@ -15,7 +15,6 @@ Singleton document IDs:
 | `aboutPage` | About page sections |
 | `contactPage` | Contact / careers page copy |
 | `disclaimerSettings` | Disclaimer popup |
-| `contactFormSettings` | Contact form labels and intro |
 
 The site builds with **fallback copy** from `src/lib/sanity/fallbacks.ts` when these documents are missing.
 

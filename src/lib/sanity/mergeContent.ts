@@ -1,6 +1,5 @@
 import type {
 	AboutPageDoc,
-	ContactFormSettingsDoc,
 	ContactPageDoc,
 	DisclaimerSettingsDoc,
 	HomePageDoc,
@@ -9,7 +8,6 @@ import type {
 } from './types';
 import {
 	DEFAULT_ABOUT_PAGE,
-	DEFAULT_CONTACT_FORM_SETTINGS,
 	DEFAULT_CONTACT_PAGE,
 	DEFAULT_DISCLAIMER_SETTINGS,
 	DEFAULT_HOME_PAGE,
@@ -110,36 +108,12 @@ export function mergeDisclaimerSettings(
 	};
 }
 
-export function mergeContactFormSettings(
-	fetched: Partial<ContactFormSettingsDoc> | null | undefined,
-): ContactFormSettingsDoc {
-	const d = DEFAULT_CONTACT_FORM_SETTINGS;
-	if (!fetched) return d;
-	return {
-		...d,
-		...fetched,
-		intro: fetched.intro ?? d.intro,
-		nameLabel: fetched.nameLabel ?? d.nameLabel,
-		namePlaceholder: fetched.namePlaceholder ?? d.namePlaceholder,
-		mobileLabel: fetched.mobileLabel ?? d.mobileLabel,
-		mobilePlaceholder: fetched.mobilePlaceholder ?? d.mobilePlaceholder,
-		emailLabel: fetched.emailLabel ?? d.emailLabel,
-		emailPlaceholder: fetched.emailPlaceholder ?? d.emailPlaceholder,
-		messageLabel: fetched.messageLabel ?? d.messageLabel,
-		messagePlaceholder: fetched.messagePlaceholder ?? d.messagePlaceholder,
-		submitLabel: fetched.submitLabel ?? d.submitLabel,
-		footnote: fetched.footnote ?? d.footnote,
-	};
-}
-
 export function mergeLayoutSingletonsBundle(raw: LayoutSingletonsBundle | null | undefined): {
 	site: SiteSettingsDoc;
 	disclaimer: DisclaimerSettingsDoc;
-	contactForm: ContactFormSettingsDoc;
 } {
 	return {
 		site: mergeSiteSettings(raw?.site ?? null),
 		disclaimer: mergeDisclaimerSettings(raw?.disclaimer ?? null),
-		contactForm: mergeContactFormSettings(raw?.contactForm ?? null),
 	};
 }

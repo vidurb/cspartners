@@ -1,6 +1,5 @@
 import aboutPage from './aboutPage';
 import blogPost from './blogPost';
-import contactFormSettings from './contactFormSettings';
 import contactPage from './contactPage';
 import disclaimerSettings from './disclaimerSettings';
 import homePage from './homePage';
@@ -19,7 +18,6 @@ export const schemaTypes = [
 	aboutPage,
 	contactPage,
 	disclaimerSettings,
-	contactFormSettings,
 	jobPage,
 	blogPost,
 	practiceArea,

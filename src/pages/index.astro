@@ -82,7 +82,6 @@ const homeId = home._id ?? 'homePage';
 const siteId = site._id ?? 'siteSettings';
 const homeField = (path: string) => singletonDataAttribute('homePage', path, homeId);
 const siteField = (path: string) => singletonDataAttribute('siteSettings', path, siteId);
-const contactFormField = (path: string) => singletonDataAttribute('contactFormSettings', path);
 ---
 
 <BaseLayout title={site.siteTitle} description={site.siteDescription ?? ''}>
@@ -302,19 +301,6 @@ const contactFormField = (path: string) => singletonDataAttribute('contactFormSe
 			<ContactForm
 				idSuffix="home"
 				variant="dark"
-				fieldDataSanity={{
-					intro: contactFormField('intro'),
-					nameLabel: contactFormField('nameLabel'),
-					namePlaceholder: contactFormField('namePlaceholder'),
-					mobileLabel: contactFormField('mobileLabel'),
-					mobilePlaceholder: contactFormField('mobilePlaceholder'),
-					emailLabel: contactFormField('emailLabel'),
-					emailPlaceholder: contactFormField('emailPlaceholder'),
-					messageLabel: contactFormField('messageLabel'),
-					messagePlaceholder: contactFormField('messagePlaceholder'),
-					submitLabel: contactFormField('submitLabel'),
-					footnote: contactFormField('footnote'),
-				}}
 			/>
 		</div>
 	</section>
