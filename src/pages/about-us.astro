@@ -26,10 +26,48 @@ const aboutId = about._id ?? 'aboutPage';
 const contactFormId = contactForm._id ?? 'contactFormSettings';
 const aboutField = (path: string) => singletonDataAttribute('aboutPage', path, aboutId);
 const contactFormField = (path: string) => singletonDataAttribute('contactFormSettings', path, contactFormId);
+const founderPhotos = [
+	{
+		src: 'https://cspartners.in/wp-content/uploads/2026/02/51-image-1024x683.jpg',
+		srcset:
+			'https://cspartners.in/wp-content/uploads/2026/02/51-image-300x200.jpg 300w, https://cspartners.in/wp-content/uploads/2026/02/51-image-768x512.jpg 768w, https://cspartners.in/wp-content/uploads/2026/02/51-image-1024x683.jpg 1024w, https://cspartners.in/wp-content/uploads/2026/02/51-image-1536x1024.jpg 1536w, https://cspartners.in/wp-content/uploads/2026/02/51-image-2048x1365.jpg 2048w',
+	},
+	{
+		src: 'https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-1024x683.jpg',
+		srcset:
+			'https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-300x200.jpg 300w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-768x512.jpg 768w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-1024x683.jpg 1024w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-1536x1024.jpg 1536w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-2048x1365.jpg 2048w',
+	},
+	{
+		src: 'https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-1024x683.jpg',
+		srcset:
+			'https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-300x200.jpg 300w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-768x512.jpg 768w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-1024x683.jpg 1024w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-1536x1024.jpg 1536w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-2048x1365.jpg 2048w',
+	},
+];
 ---
 
 <BaseLayout title={`About Us — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
 	<Hero title="About Us" variant="dark" />
+	<section class="max-w-6xl mx-auto px-4 pt-16">
+		<div class="grid gap-6 md:grid-cols-3">
+			{
+				founderPhotos.map((photo) => (
+					<div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+						<img
+							src={photo.src}
+							srcset={photo.srcset}
+							sizes="(min-width: 768px) 33vw, 100vw"
+							alt="C&S Partners founder portrait"
+							class="h-full w-full object-cover"
+							width="1024"
+							height="683"
+							loading="lazy"
+						/>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
 	<div class="max-w-3xl mx-auto px-4 py-16 space-y-10 text-slate-700 leading-relaxed text-lg">
 		{
 			about.sections?.map((section) => (
