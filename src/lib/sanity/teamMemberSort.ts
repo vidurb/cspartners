@@ -1,3 +1,4 @@
+import { stegaClean } from '@sanity/client/stega';
 import type { TeamMemberDoc, TeamMemberRole } from './types';
 
 /** Full team listing: precedence within role bands (then name). */
@@ -17,26 +18,30 @@ const HOME_CAROUSEL_ROLE_ORDER: TeamMemberRole[] = ['Senior Partner', 'Of-Counse
 
 const homeRank = new Map(HOME_CAROUSEL_ROLE_ORDER.map((role, i) => [role, i]));
 
+function cleanSanityString(value: string): string {
+	return stegaClean(value);
+}
+
 function listingRoleRank(role: string): number {
-	return listingRank.get(role as TeamMemberRole) ?? 999;
+	return listingRank.get(cleanSanityString(role) as TeamMemberRole) ?? 999;
 }
 
 function homeRoleRank(role: string): number {
-	return homeRank.get(role as TeamMemberRole) ?? 999;
+	return homeRank.get(cleanSanityString(role) as TeamMemberRole) ?? 999;
 }
 
 export function sortTeamMembersForListing(a: TeamMemberDoc, b: TeamMemberDoc): number {
 	const rd = listingRoleRank(a.role) - listingRoleRank(b.role);
 	if (rd !== 0) return rd;
-	return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+	return cleanSanityString(a.name).localeCompare(cleanSanityString(b.name), undefined, { sensitivity: 'base' });
 }
 
 export function isHomepageTeamCarouselRole(role: string): role is TeamMemberRole {
-	return homeRank.has(role as TeamMemberRole);
+	return homeRank.has(cleanSanityString(role) as TeamMemberRole);
 }
 
 export function sortTeamMembersForHomeCarousel(a: TeamMemberDoc, b: TeamMemberDoc): number {
 	const rd = homeRoleRank(a.role) - homeRoleRank(b.role);
 	if (rd !== 0) return rd;
-	return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+	return cleanSanityString(a.name).localeCompare(cleanSanityString(b.name), undefined, { sensitivity: 'base' });
 }
