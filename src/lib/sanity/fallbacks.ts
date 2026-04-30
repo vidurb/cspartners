@@ -36,7 +36,7 @@ export const DEFAULT_OFFICES: Office[] = [
 		city: 'New Delhi – 110016',
 		phone: '+91-11-41564134',
 		mapEmbedUrl:
-			'https://www.google.com/maps?q=C-2%2F6%2C%20Sri%20Aurobindo%20Marg%20Safdarjung%20Development%20Area%20New%20Delhi%20110016&output=embed',
+			'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.6495568363616!2d77.20088937662068!3d28.550251375709927!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce34c19e462b5%3A0xef21c7655c219508!2sC%26S%20Partners!5e0!3m2!1sen!2sin!4v1777535775126!5m2!1sen!2sin',
 		mapIframeTitle: 'C&S Partners New Delhi office',
 	},
 	{
@@ -44,7 +44,7 @@ export const DEFAULT_OFFICES: Office[] = [
 		street: '203, Madhava Premises, 203, E Block, Bandra Kurla Complex',
 		city: 'Mumbai, Maharashtra 400051',
 		phone: '+91-22-35227272',
-		mapEmbedUrl: 'https://www.google.com/maps?q=203%20Madhava%20Premises%20Bandra%20Kurla%20Complex%20Mumbai&output=embed',
+		mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3771.1687365500934!2d72.84970947641305!3d19.05631738214426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c900613e2f93%3A0xeca647790e728749!2sC%26S%20Partners!5e0!3m2!1sen!2sin!4v1777535813681!5m2!1sen!2sin',
 		mapIframeTitle: 'C&S Partners Mumbai office',
 	},
 ];
