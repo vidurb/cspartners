@@ -1,5 +1,6 @@
 ---
 import type { DisclaimerSettingsDoc } from '../lib/sanity/types';
+import { keyedArrayFieldPath, singletonDataAttribute } from '../lib/sanity/dataAttributes';
 
 interface Props {
 	disclaimer: DisclaimerSettingsDoc;
@@ -9,6 +10,8 @@ const { disclaimer } = Astro.props;
 const title = disclaimer.title ?? 'Disclaimer';
 const bullets = disclaimer.bullets ?? [];
 const acceptLabel = disclaimer.acceptButtonLabel ?? 'I Agree';
+const disclaimerId = disclaimer._id ?? 'disclaimerSettings';
+const disclaimerField = (path: string) => singletonDataAttribute('disclaimerSettings', path, disclaimerId);
 ---
 
 <div
@@ -20,17 +23,26 @@ const acceptLabel = disclaimer.acceptButtonLabel ?? 'I Agree';
 >
 	<div class="max-w-lg w-full bg-white rounded-lg shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
 		<div class="p-6 md:p-8">
-			<h2 id="disclaimer-title" class="font-display text-2xl font-semibold text-brand-navy mb-4">{title}</h2>
+			<h2
+				id="disclaimer-title"
+				class="font-display text-2xl font-semibold text-brand-navy mb-4"
+				data-sanity={disclaimerField('title')}
+			>{title}</h2>
 			<ul class="list-disc pl-5 space-y-3 text-slate-700 text-sm leading-relaxed">
 				{
 					bullets.map((item) => (
-						<li>{item.text}</li>
+						<li data-sanity={singletonDataAttribute(
+							'disclaimerSettings',
+							keyedArrayFieldPath('bullets', item._key, 'text') ?? 'bullets',
+							disclaimerId,
+						)}>{item.text}</li>
 					))
 				}
 			</ul>
 			<button
 				type="button"
 				id="disclaimer-accept"
+				data-sanity={disclaimerField('acceptButtonLabel')}
 				class="mt-6 w-full rounded-md bg-brand-gold px-4 py-3 text-brand-navy font-semibold hover:bg-brand-gold-light transition-colors"
 			>
 				{acceptLabel}

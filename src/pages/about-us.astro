@@ -10,6 +10,7 @@ import {
 } from '../lib/sanity/queries';
 import type { AboutPageDoc, ContactFormSettingsDoc, SiteSettingsDoc } from '../lib/sanity/types';
 import { loadQuery } from '../lib/sanity/loadQuery';
+import { keyedArrayFieldPath, singletonDataAttribute } from '../lib/sanity/dataAttributes';
 import { mergeAboutPage, mergeContactFormSettings, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
 const [siteRaw, aboutRaw, contactFormRaw] = await Promise.all([
@@ -21,6 +22,10 @@ const [siteRaw, aboutRaw, contactFormRaw] = await Promise.all([
 const site = mergeSiteSettings(siteRaw);
 const about = mergeAboutPage(aboutRaw);
 const contactForm = mergeContactFormSettings(contactFormRaw);
+const aboutId = about._id ?? 'aboutPage';
+const contactFormId = contactForm._id ?? 'contactFormSettings';
+const aboutField = (path: string) => singletonDataAttribute('aboutPage', path, aboutId);
+const contactFormField = (path: string) => singletonDataAttribute('contactFormSettings', path, contactFormId);
 ---
 
 <BaseLayout title={`About Us — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
@@ -30,9 +35,15 @@ const contactForm = mergeContactFormSettings(contactFormRaw);
 			about.sections?.map((section) => (
 				<section>
 					{section.heading && (
-						<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">{section.heading}</h2>
+						<h2
+							class="font-display text-2xl font-semibold text-brand-navy mb-4"
+							data-sanity={aboutField(keyedArrayFieldPath('sections', section._key, 'heading') ?? 'sections')}
+						>{section.heading}</h2>
 					)}
-					<PortableTextBody value={section.body} />
+					<PortableTextBody
+						value={section.body}
+						dataSanity={aboutField(keyedArrayFieldPath('sections', section._key, 'body') ?? 'sections')}
+					/>
 				</section>
 			))
 		}
@@ -42,6 +53,7 @@ const contactForm = mergeContactFormSettings(contactFormRaw);
 					<a
 						href={about.practiceAreasCtaHref ?? '/practice-area'}
 						class="font-semibold text-brand-gold hover:text-brand-gold-light"
+						data-sanity={aboutField('practiceAreasCtaLabel')}
 					>
 						{about.practiceAreasCtaLabel}
 					</a>
@@ -52,8 +64,24 @@ const contactForm = mergeContactFormSettings(contactFormRaw);
 
 	<section class="py-16 px-4 bg-brand-paper">
 		<div class="max-w-3xl mx-auto text-center">
-			<h2 class="font-display text-3xl font-semibold text-brand-navy mb-8">{about.contactSectionHeading}</h2>
-			<ContactForm idSuffix="about" settings={contactForm} />
+			<h2 class="font-display text-3xl font-semibold text-brand-navy mb-8" data-sanity={aboutField('contactSectionHeading')}>{about.contactSectionHeading}</h2>
+			<ContactForm
+				idSuffix="about"
+				settings={contactForm}
+				fieldDataSanity={{
+					intro: contactFormField('intro'),
+					nameLabel: contactFormField('nameLabel'),
+					namePlaceholder: contactFormField('namePlaceholder'),
+					mobileLabel: contactFormField('mobileLabel'),
+					mobilePlaceholder: contactFormField('mobilePlaceholder'),
+					emailLabel: contactFormField('emailLabel'),
+					emailPlaceholder: contactFormField('emailPlaceholder'),
+					messageLabel: contactFormField('messageLabel'),
+					messagePlaceholder: contactFormField('messagePlaceholder'),
+					submitLabel: contactFormField('submitLabel'),
+					footnote: contactFormField('footnote'),
+				}}
+			/>
 		</div>
 	</section>
 </BaseLayout>

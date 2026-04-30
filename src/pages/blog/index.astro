@@ -6,6 +6,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { blogPostsListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
 import type { BlogPostListItem, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { singletonDataAttribute } from '../../lib/sanity/dataAttributes';
 import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
 const [siteRaw, postsRaw] = await Promise.all([
@@ -16,6 +17,7 @@ const [siteRaw, postsRaw] = await Promise.all([
 const site = mergeSiteSettings(siteRaw);
 const posts = postsRaw.sort((a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf());
 const readMore = site.blogReadMoreLabel ?? 'Read more';
+const siteField = (path: string) => singletonDataAttribute('siteSettings', path, site._id ?? 'siteSettings');
 ---
 
 <BaseLayout title={`Blogs — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
@@ -31,6 +33,7 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 						pubDate={new Date(post.publishedAt)}
 						heroImageUrl={resolveImageUrl(post.heroImage, 800)}
 						readMoreLabel={readMore}
+						readMoreDataSanity={siteField('blogReadMoreLabel')}
 					/>
 				))
 			}

@@ -3,6 +3,7 @@ import { contactFormSettingsQuery } from '../lib/sanity/queries';
 import { mergeContactFormSettings } from '../lib/sanity/mergeContent';
 import type { ContactFormSettingsDoc } from '../lib/sanity/types';
 import { loadQuery } from '../lib/sanity/loadQuery';
+import { singletonDataAttribute } from '../lib/sanity/dataAttributes';
 
 interface Props {
 	idSuffix?: string;
@@ -11,6 +12,20 @@ interface Props {
 	settings?: ContactFormSettingsDoc;
 	/** When `internship`, submission is tagged for distinct email subject/body. */
 	source?: 'contact' | 'internship';
+	fieldDataSanity?: Partial<Record<
+		| 'intro'
+		| 'nameLabel'
+		| 'namePlaceholder'
+		| 'mobileLabel'
+		| 'mobilePlaceholder'
+		| 'emailLabel'
+		| 'emailPlaceholder'
+		| 'messageLabel'
+		| 'messagePlaceholder'
+		| 'submitLabel'
+		| 'footnote',
+		string
+	>>;
 }
 
 const {
@@ -18,9 +33,26 @@ const {
 	variant = 'light',
 	settings: settingsProp,
 	source = 'contact',
+	fieldDataSanity: fieldDataSanityProp = {},
 } = Astro.props;
 const raw = settingsProp ? null : await loadQuery<ContactFormSettingsDoc | null>(contactFormSettingsQuery);
 const form = mergeContactFormSettings(settingsProp ?? raw);
+const contactFormId = form._id ?? 'contactFormSettings';
+const formField = (path: string) => singletonDataAttribute('contactFormSettings', path, contactFormId);
+const fieldDataSanity = {
+	intro: formField('intro'),
+	nameLabel: formField('nameLabel'),
+	namePlaceholder: formField('namePlaceholder'),
+	mobileLabel: formField('mobileLabel'),
+	mobilePlaceholder: formField('mobilePlaceholder'),
+	emailLabel: formField('emailLabel'),
+	emailPlaceholder: formField('emailPlaceholder'),
+	messageLabel: formField('messageLabel'),
+	messagePlaceholder: formField('messagePlaceholder'),
+	submitLabel: formField('submitLabel'),
+	footnote: formField('footnote'),
+	...fieldDataSanityProp,
+};
 
 const nameId = `contact-name-${idSuffix}`;
 const mobileId = `contact-mobile-${idSuffix}`;
@@ -44,6 +76,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 			'text-sm text-center mb-6',
 			isDark ? 'text-slate-300' : 'text-slate-600',
 		]}
+		data-sanity={fieldDataSanity.intro}
 	>
 		{form.intro}
 	</p>
@@ -60,7 +93,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 	<div class="grid sm:grid-cols-2 gap-4">
 		<div>
 			<label for={nameId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-				{form.nameLabel}
+				<span data-sanity={fieldDataSanity.nameLabel}>{form.nameLabel}</span>
 			</label>
 			<input
 				id={nameId}
@@ -68,12 +101,13 @@ const statusId = `contact-form-status-${idSuffix}`;
 				type="text"
 				autocomplete="name"
 				placeholder={form.namePlaceholder ?? ''}
+				data-sanity={fieldDataSanity.namePlaceholder}
 				class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
 			/>
 		</div>
 		<div>
 			<label for={mobileId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-				{form.mobileLabel}
+				<span data-sanity={fieldDataSanity.mobileLabel}>{form.mobileLabel}</span>
 			</label>
 			<input
 				id={mobileId}
@@ -81,6 +115,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 				type="tel"
 				autocomplete="tel"
 				placeholder={form.mobilePlaceholder ?? ''}
+				data-sanity={fieldDataSanity.mobilePlaceholder}
 				required
 				class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
 			/>
@@ -88,7 +123,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 	</div>
 	<div>
 		<label for={emailId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-			{form.emailLabel}
+			<span data-sanity={fieldDataSanity.emailLabel}>{form.emailLabel}</span>
 		</label>
 		<input
 			id={emailId}
@@ -96,30 +131,36 @@ const statusId = `contact-form-status-${idSuffix}`;
 			type="email"
 			autocomplete="email"
 			placeholder={form.emailPlaceholder ?? ''}
+			data-sanity={fieldDataSanity.emailPlaceholder}
 			required
 			class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none"
 		/>
 	</div>
 	<div>
 		<label for={messageId} class:list={['block text-sm font-medium mb-1', isDark ? 'text-white' : 'text-brand-navy']}>
-			{form.messageLabel}
+			<span data-sanity={fieldDataSanity.messageLabel}>{form.messageLabel}</span>
 		</label>
 		<textarea
 			id={messageId}
 			name="message"
 			rows="4"
 			placeholder={form.messagePlaceholder ?? ''}
+			data-sanity={fieldDataSanity.messagePlaceholder}
 			class="w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 bg-white focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold outline-none resize-y"
 		></textarea>
 	</div>
 	<button
 		type="submit"
 		data-contact-submit
+		data-sanity={fieldDataSanity.submitLabel}
 		class="w-full rounded-md bg-brand-gold px-4 py-3 font-semibold text-brand-navy hover:bg-brand-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
 	>
 		{form.submitLabel}
 	</button>
-	<p class:list={['text-xs text-center', isDark ? 'text-slate-400' : 'text-slate-500']}>
+	<p
+		class:list={['text-xs text-center', isDark ? 'text-slate-400' : 'text-slate-500']}
+		data-sanity={fieldDataSanity.footnote}
+	>
 		{form.footnote}
 	</p>
 </form>

@@ -6,6 +6,7 @@ import PortableTextBody from '../../components/PortableTextBody.astro';
 import { practiceAreaBySlugQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
 import type { PracticeAreaDetail, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { singletonDataAttribute } from '../../lib/sanity/dataAttributes';
 import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
 const slug = Astro.params.slug;
@@ -27,6 +28,7 @@ if (!entry) {
 const { title, description, icon, body } = entry;
 const iconUrl = resolveImageUrl(icon, 128) ?? '';
 const ctaLabel = site.practiceAreaCtaLabel ?? 'Get in touch';
+const siteField = (path: string) => singletonDataAttribute('siteSettings', path, site._id ?? 'siteSettings');
 ---
 
 <BaseLayout title={`${title} — ${site.siteTitle}`} description={description}>
@@ -41,6 +43,7 @@ const ctaLabel = site.practiceAreaCtaLabel ?? 'Get in touch';
 				<a
 					href="/contact-career"
 					class="inline-block w-full rounded-md bg-brand-gold py-2 font-semibold text-brand-navy hover:bg-brand-gold-light"
+					data-sanity={siteField('practiceAreaCtaLabel')}
 				>
 					{ctaLabel}
 				</a>

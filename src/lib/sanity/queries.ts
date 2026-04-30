@@ -80,10 +80,11 @@ export const countsByTypeQuery = /* groq */ `{
 /** Lightweight fetch for RSS, blog cards, and page titles where full layout bundle isn’t needed. */
 export const siteSettingsCompactQuery = /* groq */ `
   *[_id == "siteSettings"][0]{
+    _id,
     siteTitle,
     siteDescription,
     contactEmail,
-    offices[]{ label, street, city, phone, mapEmbedUrl, mapIframeTitle },
+    offices[]{ _key, label, street, city, phone, mapEmbedUrl, mapIframeTitle },
     blogAuthorFallback,
     blogReadMoreLabel,
     practiceAreaCtaLabel
@@ -112,9 +113,9 @@ export const layoutSingletonsBundleQuery = /* groq */ `{
     _id,
     siteTitle,
     siteDescription,
-    navLinks[]{ label, href },
+    navLinks[]{ _key, label, href },
     contactEmail,
-    offices[]{ label, street, city, phone, mapEmbedUrl, mapIframeTitle },
+    offices[]{ _key, label, street, city, phone, mapEmbedUrl, mapIframeTitle },
     footerTagline,
     footerNavigateHeading,
     footerOfficesHeading,
@@ -128,7 +129,7 @@ export const layoutSingletonsBundleQuery = /* groq */ `{
   "disclaimer": *[_id == "disclaimerSettings"][0]{
     _id,
     title,
-    bullets[]{ text },
+    bullets[]{ _key, text },
     acceptButtonLabel
   },
   "contactForm": *[_id == "contactFormSettings"][0]{
@@ -174,7 +175,7 @@ export const homePageQuery = /* groq */ `
 export const aboutPageQuery = /* groq */ `
   *[_id == "aboutPage"][0]{
     _id,
-    sections[]{ heading, body },
+    sections[]{ _key, heading, body },
     practiceAreasCtaLabel,
     practiceAreasCtaHref,
     contactSectionHeading

@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import logo from '../assets/brand/logo.png';
 import HeaderLink from './HeaderLink.astro';
 import type { SiteSettingsDoc } from '../lib/sanity/types';
+import { keyedArrayFieldPath, singletonDataAttribute } from '../lib/sanity/dataAttributes';
 
 interface Props {
 	site: SiteSettingsDoc;
@@ -12,22 +13,29 @@ const { site } = Astro.props;
 const navLinks = site.navLinks;
 const homeAria = site.headerHomeAriaLabel ?? site.siteTitle;
 const mobileHomeLabel = site.mobileMenuHomeLabel ?? site.siteTitle;
+const siteId = site._id ?? 'siteSettings';
+const siteField = (path: string) => singletonDataAttribute('siteSettings', path, siteId);
 ---
 
 <header
 	class="sticky top-0 z-50 border-b border-amber-900/10 bg-brand-cream/95 backdrop-blur-md shadow-sm"
 >
 	<div class="max-w-6xl mx-auto px-4 flex items-center justify-between gap-4 h-20 md:h-24">
-		<a href="/" class="shrink-0 flex items-center gap-2" aria-label={homeAria}>
+		<a href="/" class="shrink-0 flex items-center gap-2" aria-label={homeAria} data-sanity={siteField('headerHomeAriaLabel')}>
 			<Image src={logo} alt="C&S Partners" class="h-[3.75rem] md:h-[4.5rem] w-auto" width={300} height={72} />
 		</a>
 
 		<nav class="hidden lg:flex items-center gap-1" aria-label="Primary">
 			{
-				navLinks.map(({ href, label }) => (
+				navLinks.map(({ _key, href, label }) => (
 					<HeaderLink
 						href={href}
 						class="px-3 py-2 text-sm font-medium text-brand-navy hover:text-brand-gold transition-colors rounded-md"
+						data-sanity={singletonDataAttribute(
+							'siteSettings',
+							keyedArrayFieldPath('navLinks', _key, 'label') ?? 'navLinks',
+							siteId,
+						)}
 					>
 						{label}
 					</HeaderLink>
@@ -56,10 +64,22 @@ const mobileHomeLabel = site.mobileMenuHomeLabel ?? site.siteTitle;
 		aria-label="Mobile"
 	>
 		<div class="flex flex-col gap-1">
-			<a href="/" class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100">{mobileHomeLabel}</a>
+			<a
+				href="/"
+				class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100"
+				data-sanity={siteField('mobileMenuHomeLabel')}
+			>{mobileHomeLabel}</a>
 			{
-				navLinks.map(({ href, label }) => (
-					<a href={href} class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100 hover:text-brand-gold">
+				navLinks.map(({ _key, href, label }) => (
+					<a
+						href={href}
+						class="px-3 py-3 text-brand-navy font-medium border-b border-slate-100 hover:text-brand-gold"
+						data-sanity={singletonDataAttribute(
+							'siteSettings',
+							keyedArrayFieldPath('navLinks', _key, 'label') ?? 'navLinks',
+							siteId,
+						)}
+					>
 						{label}
 					</a>
 				))

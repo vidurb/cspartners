@@ -4,15 +4,17 @@ import type { PortableTextBlock } from '@portabletext/types';
 
 interface Props {
 	value: PortableTextBlock[] | null | undefined;
+	dataSanity?: string;
 }
 
-const { value } = Astro.props;
+const { value, dataSanity } = Astro.props;
 ---
 
 {
 	value && value.length > 0 ? (
 		<div
 			class="article-body main-copy-justify text-lg leading-relaxed space-y-6 [&_a]:text-brand-gold [&_a]:underline [&_strong]:text-brand-navy"
+			data-sanity={dataSanity}
 		>
 			<PortableText value={value} />
 		</div>

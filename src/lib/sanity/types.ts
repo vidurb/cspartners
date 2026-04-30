@@ -53,9 +53,10 @@ export type TeamMemberDoc = {
 	profilePdf?: string | null;
 };
 
-export type NavLink = { label: string; href: string };
+export type NavLink = { _key?: string; label: string; href: string };
 
 export type Office = {
+	_key?: string;
 	label: string;
 	street: string;
 	city: string;
@@ -105,6 +106,7 @@ export type HomePageDoc = {
 };
 
 export type AboutSection = {
+	_key?: string;
 	heading?: string | null;
 	body?: PortableTextBlock[] | null;
 };
@@ -129,7 +131,7 @@ export type ContactPageDoc = {
 	internshipsCtaHref?: string | null;
 };
 
-export type DisclaimerBullet = { text?: string | null };
+export type DisclaimerBullet = { _key?: string; text?: string | null };
 
 export type DisclaimerSettingsDoc = {
 	_id?: string;

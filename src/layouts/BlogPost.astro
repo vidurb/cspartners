@@ -16,9 +16,10 @@ interface Props {
 	body?: PortableTextBlock[] | null;
 	/** Brand suffix in document title (from Sanity site settings). */
 	siteTitle?: string;
+	authorDataSanity?: string;
 }
 
-const { title, description, pubDate, updatedDate, author, heroImageUrl, ogImage, body, siteTitle = 'C&S Partners' } =
+const { title, description, pubDate, updatedDate, author, heroImageUrl, ogImage, body, siteTitle = 'C&S Partners', authorDataSanity } =
 	Astro.props;
 const metaImage = heroImageUrl ?? ogImage;
 ---
@@ -53,7 +54,7 @@ const metaImage = heroImageUrl ?? ogImage;
 					}
 				</p>
 				<h1 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy leading-tight">{title}</h1>
-				<p class="text-slate-600 mt-3">By {author}</p>
+				<p class="text-slate-600 mt-3">By <span data-sanity={authorDataSanity}>{author}</span></p>
 			</header>
 			<PortableTextBody value={body} />
 		</div>

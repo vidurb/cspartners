@@ -16,6 +16,7 @@ import {
 } from '../lib/sanity/queries';
 import type { BlogPostListItem, HomePageDoc, PracticeAreaListItem, SiteSettingsDoc, TeamMemberDoc } from '../lib/sanity/types';
 import { resolveImageUrl } from '../lib/sanity/imageUrl';
+import { singletonDataAttribute } from '../lib/sanity/dataAttributes';
 import { mergeHomePage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 import {
 	isHomepageTeamCarouselRole,
@@ -77,6 +78,11 @@ const awardRecognitions = [
 
 const founderImgUrl = resolveImageUrl(home.founderImage ?? null, 1024);
 const readMore = site.blogReadMoreLabel ?? 'Read more';
+const homeId = home._id ?? 'homePage';
+const siteId = site._id ?? 'siteSettings';
+const homeField = (path: string) => singletonDataAttribute('homePage', path, homeId);
+const siteField = (path: string) => singletonDataAttribute('siteSettings', path, siteId);
+const contactFormField = (path: string) => singletonDataAttribute('contactFormSettings', path);
 ---
 
 <BaseLayout title={site.siteTitle} description={site.siteDescription ?? ''}>
@@ -85,13 +91,20 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 	>
 		<div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(circle_at_30%_20%,#b8860b,transparent_50%)]"></div>
 		<div class="max-w-5xl mx-auto text-center relative">
-			<h1 class="font-display text-4xl md:text-6xl font-semibold tracking-tight mb-6">{home.heroTitle}</h1>
-			<p class="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-8 text-justify">
+			<h1
+				class="font-display text-4xl md:text-6xl font-semibold tracking-tight mb-6"
+				data-sanity={homeField('heroTitle')}
+			>{home.heroTitle}</h1>
+			<p
+				class="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-8 text-justify"
+				data-sanity={homeField('heroSubtitle')}
+			>
 				{home.heroSubtitle}
 			</p>
 			<a
 				href={home.heroCtaHref ?? '/contact-career'}
 				class="inline-flex items-center justify-center rounded-md bg-brand-gold px-8 py-3 font-semibold text-brand-navy hover:bg-brand-gold-light transition-colors"
+				data-sanity={homeField('heroCtaLabel')}
 			>
 				{home.heroCtaLabel}
 			</a>
@@ -101,13 +114,17 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 	<section class="py-16 px-4 bg-white">
 		<div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
 			<div>
-				<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy mb-6">{home.founderHeading}</h2>
+				<h2
+					class="font-display text-3xl md:text-4xl font-semibold text-brand-navy mb-6"
+					data-sanity={homeField('founderHeading')}
+				>{home.founderHeading}</h2>
 				<div class="space-y-4 text-slate-700 leading-relaxed">
-					<PortableTextBody value={home.founderBody} />
-					{home.founderSignature && <p class="font-medium text-brand-navy text-justify">{home.founderSignature}</p>}
+					<PortableTextBody value={home.founderBody} dataSanity={homeField('founderBody')} />
+					{home.founderSignature && <p class="font-medium text-brand-navy text-justify" data-sanity={homeField('founderSignature')}>{home.founderSignature}</p>}
 					<a
 						href={home.founderCtaHref ?? '/about-us'}
 						class="inline-block mt-4 text-brand-gold font-semibold hover:text-brand-gold-light"
+						data-sanity={homeField('founderCtaLabel')}
 					>
 						{home.founderCtaLabel}
 					</a>
@@ -127,8 +144,14 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 
 	<section class="py-16 px-4 bg-brand-paper">
 		<div class="max-w-6xl mx-auto">
-			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-4">{home.practiceAreasHeading}</h2>
-			<p class="text-slate-600 max-w-2xl mx-auto mb-12 text-justify">
+			<h2
+				class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-4"
+				data-sanity={homeField('practiceAreasHeading')}
+			>{home.practiceAreasHeading}</h2>
+			<p
+				class="text-slate-600 max-w-2xl mx-auto mb-12 text-justify"
+				data-sanity={homeField('practiceAreasIntro')}
+			>
 				{home.practiceAreasIntro}
 			</p>
 			<div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -146,6 +169,7 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 				<a
 					href="/practice-area"
 					class="inline-flex font-semibold text-brand-gold hover:text-brand-gold-light"
+					data-sanity={homeField('practiceAreasViewAllLabel')}
 				>
 					{home.practiceAreasViewAllLabel}
 				</a>
@@ -155,7 +179,10 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 
 	<section class="py-16 px-4 bg-white">
 		<div class="max-w-6xl mx-auto">
-			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">{home.teamHeading}</h2>
+			<h2
+				class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12"
+				data-sanity={homeField('teamHeading')}
+			>{home.teamHeading}</h2>
 			<div class="-mx-4 px-4 md:mx-0 md:px-0">
 				<div
 					class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:thin] md:[scrollbar-gutter:stable]"
@@ -190,7 +217,7 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 				</div>
 			</div>
 			<p class="text-center mt-10">
-				<a href="/our-team" class="font-semibold text-brand-gold hover:text-brand-gold-light">{home.teamMeetFullLabel}</a>
+				<a href="/our-team" class="font-semibold text-brand-gold hover:text-brand-gold-light" data-sanity={homeField('teamMeetFullLabel')}>{home.teamMeetFullLabel}</a>
 			</p>
 		</div>
 	</section>
@@ -236,7 +263,10 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 
 	<section class="py-16 px-4 bg-brand-paper">
 		<div class="max-w-6xl mx-auto">
-			<h2 class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12">{home.blogsHeading}</h2>
+			<h2
+				class="font-display text-3xl md:text-4xl font-semibold text-brand-navy text-center mb-12"
+				data-sanity={homeField('blogsHeading')}
+			>{home.blogsHeading}</h2>
 			<div class="-mx-4 px-4 md:mx-0 md:px-0">
 				<div
 					class="flex gap-8 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 [scrollbar-width:thin] md:[scrollbar-gutter:stable]"
@@ -253,6 +283,7 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 									pubDate={new Date(post.publishedAt)}
 									heroImageUrl={resolveImageUrl(post.heroImage, 800)}
 									readMoreLabel={readMore}
+									readMoreDataSanity={siteField('blogReadMoreLabel')}
 								/>
 							</div>
 						))
@@ -260,15 +291,31 @@ const readMore = site.blogReadMoreLabel ?? 'Read more';
 				</div>
 			</div>
 			<p class="text-center mt-10">
-				<a href="/blog" class="font-semibold text-brand-gold hover:text-brand-gold-light">{home.blogsAllArticlesLabel}</a>
+				<a href="/blog" class="font-semibold text-brand-gold hover:text-brand-gold-light" data-sanity={homeField('blogsAllArticlesLabel')}>{home.blogsAllArticlesLabel}</a>
 			</p>
 		</div>
 	</section>
 
 	<section class="py-16 px-4 bg-brand-navy text-slate-200">
 		<div class="max-w-3xl mx-auto text-center">
-			<h2 class="font-display text-3xl font-semibold text-white mb-8">{home.contactSectionHeading}</h2>
-			<ContactForm idSuffix="home" variant="dark" />
+			<h2 class="font-display text-3xl font-semibold text-white mb-8" data-sanity={homeField('contactSectionHeading')}>{home.contactSectionHeading}</h2>
+			<ContactForm
+				idSuffix="home"
+				variant="dark"
+				fieldDataSanity={{
+					intro: contactFormField('intro'),
+					nameLabel: contactFormField('nameLabel'),
+					namePlaceholder: contactFormField('namePlaceholder'),
+					mobileLabel: contactFormField('mobileLabel'),
+					mobilePlaceholder: contactFormField('mobilePlaceholder'),
+					emailLabel: contactFormField('emailLabel'),
+					emailPlaceholder: contactFormField('emailPlaceholder'),
+					messageLabel: contactFormField('messageLabel'),
+					messagePlaceholder: contactFormField('messagePlaceholder'),
+					submitLabel: contactFormField('submitLabel'),
+					footnote: contactFormField('footnote'),
+				}}
+			/>
 		</div>
 	</section>
 </BaseLayout>

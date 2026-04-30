@@ -4,6 +4,7 @@ import BlogPost from '../../layouts/BlogPost.astro';
 import { blogPostBySlugQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
 import type { BlogPostDetail, SiteSettingsDoc } from '../../lib/sanity/types';
 import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { singletonDataAttribute } from '../../lib/sanity/dataAttributes';
 import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
 
 const slug = Astro.params.slug;
@@ -24,6 +25,9 @@ if (!post) {
 
 const heroImageUrl = resolveImageUrl(post.heroImage, 1200);
 const author = post.author?.trim() || site.blogAuthorFallback || site.siteTitle;
+const authorDataSanity = post.author?.trim()
+	? undefined
+	: singletonDataAttribute('siteSettings', 'blogAuthorFallback', site._id ?? 'siteSettings');
 ---
 
 <BlogPost
@@ -35,4 +39,5 @@ const author = post.author?.trim() || site.blogAuthorFallback || site.siteTitle;
 	heroImageUrl={heroImageUrl}
 	body={post.body}
 	siteTitle={site.siteTitle}
+	authorDataSanity={authorDataSanity}
 />
