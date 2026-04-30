@@ -38,6 +38,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 <form
 	id={formId}
 	data-contact-form
+	data-contact-source={source}
 	class:list={['space-y-4 max-w-xl mx-auto text-left', isDark && 'text-slate-200']}
 	method="post"
 	action="#"
@@ -131,6 +132,7 @@ const statusId = `contact-form-status-${idSuffix}`;
 </form>
 
 <script>
+	import * as Sentry from '@sentry/astro';
 	import { actions, isInputError } from 'astro:actions';
 
 	function wireContactForm(form: HTMLFormElement) {
@@ -185,7 +187,14 @@ const statusId = `contact-form-status-${idSuffix}`;
 					showStatus('Thank you — your message has been sent. We will be in touch shortly.', false);
 					form.reset();
 				}
-			} catch {
+			} catch (error) {
+				const formSource = form.getAttribute('data-contact-source') ?? 'unknown';
+				Sentry.captureException(error instanceof Error ? error : new Error(String(error)), {
+					tags: {
+						'form.id': form.id || 'unknown',
+						'form.source': formSource,
+					},
+				});
 				showStatus('Something went wrong. Please try again later.', true);
 			} finally {
 				form.removeAttribute('aria-busy');

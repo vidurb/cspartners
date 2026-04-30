@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/astro';
 import { ActionError, defineAction } from 'astro:actions';
 import { z } from 'astro/zod';
 import { checkBotId } from 'botid/server';
@@ -26,6 +27,8 @@ export const server = {
 				.transform((s) => (s === 'internship' ? ('internship' as const) : undefined)),
 		}),
 		handler: async (input, context) => {
+			const sourceTag = input.source === 'internship' ? 'internship' : 'contact';
+
 			try {
 				const verification = await checkBotId({
 					developmentOptions: import.meta.env.DEV
@@ -45,6 +48,13 @@ export const server = {
 			} catch (e) {
 				if (e instanceof ActionError) throw e;
 				console.error('[contact] BotID check failed:', e);
+				Sentry.captureException(e instanceof Error ? e : new Error(String(e)), {
+					tags: {
+						action: 'contact',
+						'form.source': sourceTag,
+						'failure.stage': 'botid',
+					},
+				});
 				throw new ActionError({
 					code: 'FORBIDDEN',
 					message: 'Unable to verify this submission.',
@@ -58,6 +68,17 @@ export const server = {
 			if (!to?.trim() || !from?.trim() || !apiKey?.trim()) {
 				console.error(
 					'[contact] Missing CONTACT_EMAIL_TO, CONTACT_EMAIL_FROM, or RESEND_API_KEY',
+				);
+				Sentry.captureMessage(
+					'Contact action: missing CONTACT_EMAIL_TO, CONTACT_EMAIL_FROM, or RESEND_API_KEY',
+					{
+						level: 'error',
+						tags: {
+							action: 'contact',
+							'form.source': sourceTag,
+							'failure.stage': 'config',
+						},
+					},
 				);
 				throw new ActionError({
 					code: 'INTERNAL_SERVER_ERROR',
@@ -89,6 +110,21 @@ export const server = {
 
 			if (error) {
 				console.error('[contact] Resend error:', error);
+				const errMessage =
+					error &&
+					typeof error === 'object' &&
+					'message' in error &&
+					typeof (error as { message: unknown }).message === 'string'
+						? (error as { message: string }).message
+						: 'Resend returned an error';
+				Sentry.captureMessage(`Resend error: ${errMessage}`, {
+					level: 'error',
+					tags: {
+						action: 'contact',
+						'form.source': sourceTag,
+						'failure.stage': 'resend',
+					},
+				});
 				throw new ActionError({
 					code: 'INTERNAL_SERVER_ERROR',
 					message: 'Could not send your message. Please try again later.',
