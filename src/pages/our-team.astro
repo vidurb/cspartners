@@ -16,6 +16,7 @@ const [siteRaw, teamMembersRaw] = await Promise.all([
 ]);
 
 const site = mergeSiteSettings(siteRaw);
+/** Role seniority first (see `LISTING_ROLE_ORDER` in teamMemberSort); name is tie-breaker only. */
 const teamMembersSorted = [...teamMembersRaw].sort(sortTeamMembersForListing);
 const teamMembers = teamMembersSorted.map((m) => ({
 	name: m.name,

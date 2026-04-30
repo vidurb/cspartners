@@ -58,8 +58,9 @@ export const practiceAreaBySlugQuery = /* groq */ `
   }
 `;
 
+/** Fetch order is arbitrary; pages must sort via `sortTeamMembersForListing` / `sortTeamMembersForHomeCarousel`. */
 export const teamMembersListQuery = /* groq */ `
-  *[_type == "teamMember" && defined(slug.current)] | order(name asc) {
+  *[_type == "teamMember" && defined(slug.current)] {
     _id,
     name,
     "slug": slug.current,

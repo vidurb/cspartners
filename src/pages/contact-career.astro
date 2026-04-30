@@ -28,8 +28,8 @@ const offices = site.offices;
 				offices.map((office) => (
 					<div>
 						<h2 class="font-display text-xl font-semibold text-brand-navy mb-2">{office.label}</h2>
-						<p class="text-slate-700">{office.street}</p>
-						<p class="text-slate-700">{office.city}</p>
+						<p class="text-slate-700 text-justify">{office.street}</p>
+						<p class="text-slate-700 text-justify">{office.city}</p>
 						<p class="mt-2">
 							<a href={`tel:${office.phone.replace(/\s/g, '')}`} class="text-brand-gold font-semibold hover:underline">
 								{office.phone}
@@ -73,7 +73,7 @@ const offices = site.offices;
 
 	<section class="max-w-3xl mx-auto px-4 pb-20">
 		<h2 class="font-display text-2xl font-semibold text-brand-navy mb-4">{contactPage.internshipsHeading}</h2>
-		<p class="text-slate-700 leading-relaxed mb-6">
+		<p class="text-slate-700 leading-relaxed mb-6 text-justify">
 			{contactPage.internshipsBody}
 		</p>
 		<a

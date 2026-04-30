@@ -26,4 +26,10 @@
 	.font-display {
 		font-family: var(--font-display);
 	}
+
+	/** Main narrative copy only — avoids justifying headings inside Portable Text. */
+	.main-copy-justify :where(p, li, blockquote) {
+		text-align: justify;
+		text-wrap: pretty;
+	}
 }
