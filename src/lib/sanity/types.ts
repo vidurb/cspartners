@@ -39,6 +39,7 @@ export const TEAM_MEMBER_ROLE_VALUES = [
 	'Managing Associate',
 	'Partner',
 	'Of-Counsel',
+	'Promoter-Partner',
 	'Senior Partner',
 ] as const;
 
@@ -49,6 +50,7 @@ export type TeamMemberDoc = {
 	name: string;
 	slug: string;
 	role: TeamMemberRole;
+	listingOrder?: number;
 	photo?: SanityImageAsset | null;
 	profilePdf?: string | null;
 };

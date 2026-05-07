@@ -6,6 +6,7 @@ const ROLE_OPTIONS = [
 	{ title: 'Managing Associate', value: 'Managing Associate' },
 	{ title: 'Partner', value: 'Partner' },
 	{ title: 'Of-Counsel', value: 'Of-Counsel' },
+	{ title: 'Promoter-Partner', value: 'Promoter-Partner' },
 	{ title: 'Senior Partner', value: 'Senior Partner' },
 ] as const;
 
@@ -36,6 +37,12 @@ export default defineType({
 				layout: 'dropdown',
 			},
 			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: 'listingOrder',
+			title: 'Listing order',
+			type: 'number',
+			description: 'Lower numbers appear first on Our Team (seniority). Leave empty to sort by role only.',
 		}),
 		defineField({
 			name: 'photo',
