@@ -16,7 +16,8 @@
     "sanity:import:dry": "tsx scripts/sanity/import-content.ts --dry-run",
     "sanity:import:verify": "tsx scripts/sanity/import-content.ts --verify",
     "sanity:seed": "tsx scripts/sanity/seed-content.ts",
-    "sanity:migrate-wp-images": "tsx scripts/sanity/migrate-wp-images.ts"
+    "sanity:migrate-wp-images": "tsx scripts/sanity/migrate-wp-images.ts",
+    "generate:favicons": "tsx scripts/generate-favicons.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
@@ -50,6 +51,7 @@
   "devDependencies": {
     "@sanity/vision": "^5.22.0",
     "gray-matter": "^4.0.3",
+    "png-to-ico": "^3.0.1",
     "rollup-plugin-visualizer": "^7.0.1",
     "tsx": "^4.21.0"
   }
