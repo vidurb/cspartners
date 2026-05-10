@@ -22,7 +22,7 @@ const teamMembers = teamMembersSorted.map((m) => ({
 	name: m.name,
 	role: m.role,
 	photoUrl: resolveImageUrl(m.photo, 400) ?? '',
-	profilePdf: m.profilePdf,
+	profilePdfSlug: m.profilePdf ? m.slug : null,
 }));
 ---
 

@@ -71,6 +71,13 @@ export const teamMembersListQuery = /* groq */ `
   }
 `;
 
+export const teamMemberPdfBySlugQuery = /* groq */ `
+  *[_type == "teamMember" && slug.current == $slug][0]{
+    name,
+    "profilePdf": profilePdf.asset->url
+  }
+`;
+
 export const countsByTypeQuery = /* groq */ `{
   "blogPost": count(*[_type == "blogPost"]),
   "practiceArea": count(*[_type == "practiceArea"]),

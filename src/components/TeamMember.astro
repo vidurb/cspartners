@@ -4,7 +4,7 @@ interface Props {
 		name: string;
 		role: string;
 		photoUrl: string;
-		profilePdf?: string | null;
+		profilePdfSlug?: string | null;
 	};
 }
 
@@ -25,11 +25,9 @@ const { member } = Astro.props;
 		/>
 	</div>
 	{
-		member.profilePdf ? (
+		member.profilePdfSlug ? (
 			<a
-				href={member.profilePdf}
-				target="_blank"
-				rel="noopener noreferrer"
+				href={`/team-member-pdf/${encodeURIComponent(member.profilePdfSlug)}`}
 				class="font-display text-lg font-semibold text-brand-navy hover:text-brand-gold"
 			>
 				{member.name}
