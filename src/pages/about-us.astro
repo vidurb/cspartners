@@ -10,6 +10,7 @@ import {
 import type { AboutPageDoc, SiteSettingsDoc } from '../lib/sanity/types';
 import { loadQuery } from '../lib/sanity/loadQuery';
 import { keyedArrayFieldPath, singletonDataAttribute } from '../lib/sanity/dataAttributes';
+import { buildImageSrcset, resolveImageUrl } from '../lib/sanity/imageUrl';
 import { mergeAboutPage, mergeSiteSettings } from '../lib/sanity/mergeContent';
 
 const [siteRaw, aboutRaw] = await Promise.all([
@@ -21,47 +22,48 @@ const site = mergeSiteSettings(siteRaw);
 const about = mergeAboutPage(aboutRaw);
 const aboutId = about._id ?? 'aboutPage';
 const aboutField = (path: string) => singletonDataAttribute('aboutPage', path, aboutId);
-const founderPhotos = [
-	{
-		src: 'https://cspartners.in/wp-content/uploads/2026/02/51-image-1024x683.jpg',
-		srcset:
-			'https://cspartners.in/wp-content/uploads/2026/02/51-image-300x200.jpg 300w, https://cspartners.in/wp-content/uploads/2026/02/51-image-768x512.jpg 768w, https://cspartners.in/wp-content/uploads/2026/02/51-image-1024x683.jpg 1024w, https://cspartners.in/wp-content/uploads/2026/02/51-image-1536x1024.jpg 1536w, https://cspartners.in/wp-content/uploads/2026/02/51-image-2048x1365.jpg 2048w',
-	},
-	{
-		src: 'https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-1024x683.jpg',
-		srcset:
-			'https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-300x200.jpg 300w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-768x512.jpg 768w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-1024x683.jpg 1024w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-1536x1024.jpg 1536w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8854-2048x1365.jpg 2048w',
-	},
-	{
-		src: 'https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-1024x683.jpg',
-		srcset:
-			'https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-300x200.jpg 300w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-768x512.jpg 768w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-1024x683.jpg 1024w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-1536x1024.jpg 1536w, https://cspartners.in/wp-content/uploads/2026/03/9B1A8893-2048x1365.jpg 2048w',
-	},
-];
+
+const founderPortraitRows = (about.founderPortraits ?? []).flatMap((row) => {
+	const src = resolveImageUrl(row.image ?? null, 1024);
+	if (!src) return [];
+	const srcset = buildImageSrcset(row.image ?? null);
+	const dim = row.image?.asset?.metadata?.dimensions;
+	const width = dim?.width ?? 1024;
+	const height = dim?.height ?? Math.round((683 / 1024) * width);
+	const alt = row.alt?.trim() || 'C&S Partners founder portrait';
+	return [{ row, src, srcset, width, height, alt }];
+});
 ---
 
 <BaseLayout title={`About Us — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
 	<Hero title="About Us" variant="dark" />
-	<section class="max-w-6xl mx-auto px-4 pt-16">
-		<div class="grid gap-6 md:grid-cols-3">
-			{
-				founderPhotos.map((photo) => (
-					<div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-						<img
-							src={photo.src}
-							srcset={photo.srcset}
-							sizes="(min-width: 768px) 33vw, 100vw"
-							alt="C&S Partners founder portrait"
-							class="h-full w-full object-cover"
-							width="1024"
-							height="683"
-							loading="lazy"
-						/>
-					</div>
-				))
-			}
-		</div>
-	</section>
+	{
+		founderPortraitRows.length > 0 && (
+			<section class="max-w-6xl mx-auto px-4 pt-16">
+				<div class="grid gap-6 md:grid-cols-3">
+					{founderPortraitRows.map(({ row, src, srcset, width, height, alt }) => (
+						<div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+							<img
+								src={src}
+								srcset={srcset}
+								sizes="(min-width: 768px) 33vw, 100vw"
+								alt={alt}
+								class="h-full w-full object-cover"
+								width={width}
+								height={height}
+								loading="lazy"
+								data-sanity={
+									row._key
+										? aboutField(keyedArrayFieldPath('founderPortraits', row._key, 'image') ?? 'founderPortraits')
+										: aboutField('founderPortraits')
+								}
+							/>
+						</div>
+					))}
+				</div>
+			</section>
+		)
+	}
 
 	<div class="max-w-3xl mx-auto px-4 py-16 space-y-10 text-slate-700 leading-relaxed text-lg">
 		{

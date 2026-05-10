@@ -85,6 +85,18 @@ export type SiteSettingsDoc = {
 	practiceAreaCtaLabel?: string | null;
 };
 
+export type AwardLogoRow = {
+	_key?: string;
+	alt?: string | null;
+	image?: SanityImageAsset | null;
+};
+
+export type FounderPortraitRow = {
+	_key?: string;
+	alt?: string | null;
+	image?: SanityImageAsset | null;
+};
+
 export type HomePageDoc = {
 	_id?: string;
 	heroTitle?: string | null;
@@ -97,6 +109,7 @@ export type HomePageDoc = {
 	founderCtaLabel?: string | null;
 	founderCtaHref?: string | null;
 	founderImage?: SanityImageAsset | null;
+	awardLogos?: AwardLogoRow[] | null;
 	practiceAreasHeading?: string | null;
 	practiceAreasIntro?: string | null;
 	practiceAreasViewAllLabel?: string | null;
@@ -115,6 +128,7 @@ export type AboutSection = {
 
 export type AboutPageDoc = {
 	_id?: string;
+	founderPortraits?: FounderPortraitRow[] | null;
 	sections?: AboutSection[] | null;
 	practiceAreasCtaLabel?: string | null;
 	practiceAreasCtaHref?: string | null;

@@ -1,7 +1,9 @@
 import type {
 	AboutPageDoc,
+	AwardLogoRow,
 	ContactPageDoc,
 	DisclaimerSettingsDoc,
+	FounderPortraitRow,
 	HomePageDoc,
 	LayoutSingletonsBundle,
 	SiteSettingsDoc,
@@ -13,6 +15,18 @@ import {
 	DEFAULT_HOME_PAGE,
 	DEFAULT_SITE_SETTINGS,
 } from './fallbacks';
+
+function awardLogoHasAsset(row: AwardLogoRow | null | undefined): boolean {
+	const asset = row?.image?.asset;
+	if (!asset || typeof asset !== 'object') return false;
+	return Boolean(asset.url || asset._ref);
+}
+
+function portraitHasAsset(row: FounderPortraitRow | null | undefined): boolean {
+	const asset = row?.image?.asset;
+	if (!asset || typeof asset !== 'object') return false;
+	return Boolean(asset.url || asset._ref);
+}
 
 export function mergeSiteSettings(fetched: Partial<SiteSettingsDoc> | null | undefined): SiteSettingsDoc {
 	const d = DEFAULT_SITE_SETTINGS;
@@ -53,6 +67,7 @@ export function mergeHomePage(fetched: Partial<HomePageDoc> | null | undefined):
 		founderCtaLabel: fetched.founderCtaLabel ?? d.founderCtaLabel,
 		founderCtaHref: fetched.founderCtaHref ?? d.founderCtaHref,
 		founderImage: fetched.founderImage ?? d.founderImage,
+		awardLogos: fetched.awardLogos?.some(awardLogoHasAsset) ? fetched.awardLogos : d.awardLogos,
 		practiceAreasHeading: fetched.practiceAreasHeading ?? d.practiceAreasHeading,
 		practiceAreasIntro: fetched.practiceAreasIntro ?? d.practiceAreasIntro,
 		practiceAreasViewAllLabel: fetched.practiceAreasViewAllLabel ?? d.practiceAreasViewAllLabel,
@@ -70,6 +85,9 @@ export function mergeAboutPage(fetched: Partial<AboutPageDoc> | null | undefined
 	return {
 		...d,
 		...fetched,
+		founderPortraits: fetched.founderPortraits?.some(portraitHasAsset)
+			? fetched.founderPortraits
+			: d.founderPortraits,
 		sections: fetched.sections?.filter((s) => s.heading?.trim())?.length ? fetched.sections : d.sections,
 		practiceAreasCtaLabel: fetched.practiceAreasCtaLabel ?? d.practiceAreasCtaLabel,
 		practiceAreasCtaHref: fetched.practiceAreasCtaHref ?? d.practiceAreasCtaHref,

@@ -138,6 +138,7 @@ export const homePageQuery = /* groq */ `
     founderCtaLabel,
     founderCtaHref,
     "founderImage": founderImage ${imageProjection},
+    awardLogos[]{ _key, alt, "image": image ${imageProjection} },
     practiceAreasHeading,
     practiceAreasIntro,
     practiceAreasViewAllLabel,
@@ -152,6 +153,7 @@ export const homePageQuery = /* groq */ `
 export const aboutPageQuery = /* groq */ `
   *[_id == "aboutPage"][0]{
     _id,
+    founderPortraits[]{ _key, alt, "image": image ${imageProjection} },
     sections[]{ _key, heading, body },
     practiceAreasCtaLabel,
     practiceAreasCtaHref,

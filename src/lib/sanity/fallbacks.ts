@@ -117,6 +117,7 @@ export const DEFAULT_HOME_PAGE: HomePageDoc = {
 	blogsHeading: 'Our Blogs',
 	blogsAllArticlesLabel: 'All articles →',
 	contactSectionHeading: 'Contact Us',
+	awardLogos: [],
 };
 
 function aboutSection(heading: string, paragraphs: string[]): { heading: string; body: PortableTextBlock[] } {
@@ -134,6 +135,7 @@ function aboutSection(heading: string, paragraphs: string[]): { heading: string;
 
 export const DEFAULT_ABOUT_PAGE: AboutPageDoc = {
 	_id: SINGLETON_IDS.aboutPage,
+	founderPortraits: [],
 	sections: [
 		aboutSection("From the Founders' Desk", [
 			'For over three decades, the three of us have walked the same corridors of law. Initially as law students, then as colleagues, and eventually as partners bound by a shared purpose. C&S Partners is the natural extension of that journey. It reflects not just our collective experience, but the values that have shaped us since our earliest days in the profession: integrity in every action, clarity in every solution, and an unwavering commitment to the people who place their trust in us.',

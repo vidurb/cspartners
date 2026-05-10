@@ -37,6 +37,35 @@ export default defineType({
 				},
 			],
 		}),
+		defineField({
+			name: 'founderPortraits',
+			title: 'Founder portraits',
+			description: 'Three photos above the copy; order is left-to-right in the grid.',
+			type: 'array',
+			of: [
+				{
+					type: 'object',
+					name: 'founderPortrait',
+					title: 'Founder portrait',
+					fields: [
+						defineField({
+							name: 'image',
+							title: 'Portrait',
+							type: 'image',
+							options: { hotspot: true },
+							validation: (Rule) => Rule.required(),
+						}),
+						defineField({ name: 'alt', title: 'Alt text', type: 'string' }),
+					],
+					preview: {
+						select: { alt: 'alt' },
+						prepare({ alt }: { alt?: string }) {
+							return { title: alt || 'Founder portrait' };
+						},
+					},
+				},
+			],
+		}),
 		defineField({ name: 'practiceAreasCtaLabel', title: 'Practice areas CTA label', type: 'string' }),
 		defineField({ name: 'practiceAreasCtaHref', title: 'Practice areas CTA link', type: 'string' }),
 		defineField({ name: 'contactSectionHeading', title: 'Contact section heading', type: 'string' }),

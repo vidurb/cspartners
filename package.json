@@ -15,7 +15,8 @@
     "sanity:import": "tsx scripts/sanity/import-content.ts",
     "sanity:import:dry": "tsx scripts/sanity/import-content.ts --dry-run",
     "sanity:import:verify": "tsx scripts/sanity/import-content.ts --verify",
-    "sanity:seed": "tsx scripts/sanity/seed-content.ts"
+    "sanity:seed": "tsx scripts/sanity/seed-content.ts",
+    "sanity:migrate-wp-images": "tsx scripts/sanity/migrate-wp-images.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",

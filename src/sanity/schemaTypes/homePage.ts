@@ -25,6 +25,40 @@ export default defineType({
 			type: 'image',
 			options: { hotspot: true },
 		}),
+		defineField({
+			name: 'awardLogos',
+			title: 'Awards & recognitions logos',
+			description: 'Shown on the homepage carousel; order matches display left-to-right.',
+			type: 'array',
+			of: [
+				{
+					type: 'object',
+					name: 'awardLogo',
+					title: 'Award logo',
+					fields: [
+						defineField({
+							name: 'image',
+							title: 'Logo image',
+							type: 'image',
+							options: { hotspot: true },
+							validation: (Rule) => Rule.required(),
+						}),
+						defineField({
+							name: 'alt',
+							title: 'Alt text',
+							type: 'string',
+							validation: (Rule) => Rule.required(),
+						}),
+					],
+					preview: {
+						select: { alt: 'alt' },
+						prepare({ alt }: { alt?: string }) {
+							return { title: alt || 'Award logo' };
+						},
+					},
+				},
+			],
+		}),
 		defineField({ name: 'practiceAreasHeading', title: 'Practice areas heading', type: 'string' }),
 		defineField({ name: 'practiceAreasIntro', title: 'Practice areas intro', type: 'text', rows: 3 }),
 		defineField({ name: 'practiceAreasViewAllLabel', title: 'Practice areas “view all” label', type: 'string' }),
