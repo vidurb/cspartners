@@ -66,7 +66,7 @@ export const teamMembersListQuery = /* groq */ `
     "slug": slug.current,
     role,
     listingOrder,
-    profilePdf,
+    "profilePdf": profilePdf.asset->url,
     "photo": photo ${imageProjection}
   }
 `;

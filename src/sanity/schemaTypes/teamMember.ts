@@ -53,8 +53,11 @@ export default defineType({
 		}),
 		defineField({
 			name: 'profilePdf',
-			title: 'Profile PDF URL',
-			type: 'url',
+			title: 'Profile PDF',
+			type: 'file',
+			options: {
+				accept: 'application/pdf',
+			},
 		}),
 	],
 	preview: {
