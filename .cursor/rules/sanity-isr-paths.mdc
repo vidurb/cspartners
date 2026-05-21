@@ -1,0 +1,32 @@
+---
+description: Keep Sanity ISR revalidation paths in sync when routes or CMS types change
+globs: src/pages/**/*.{astro,ts},sanity.config.ts,sanity/webhook-revalidate.groq,src/sanity/schemaTypes/**/*
+alwaysApply: false
+---
+
+# Sanity ISR path mapping
+
+When changing routes, slugs, or Sanity `_type` → URL mapping, keep these aligned in the **same change**:
+
+1. **`sanity.config.ts`** — Presentation tool `resolve.locations` hrefs
+2. **`sanity/webhook-revalidate.groq`** — webhook filter `_type` list + projection `paths`
+3. **`src/pages/`** — actual routes, plus any page that embeds the type (e.g. home lists blog/practice/team)
+
+## On add/rename/remove
+
+- Add new `_type` to the webhook **filter** if it drives published content.
+- Extend the GROQ **projection** `select()` branch with every path to purge: detail URL, index, and cross-page embeds (`/`, `/rss.xml`, etc.).
+
+## Conventions
+
+- Slug detail pages: trailing slash (`/blog/{slug}/`, `/practice-area/{slug}/`, `/jobs/{slug}/`).
+- Index routes: match existing internal `href`s in `src/pages/`.
+- `siteSettings` / `disclaimerSettings`: use the fixed fan-out list in `sanity/webhook-revalidate.groq`.
+
+## Slug changes and deletes
+
+Projection must purge `before().slug.current` when it differs from `after()`, using `coalesce(after().slug.current, before().slug.current)` for the primary slug.
+
+## Webhook dashboard
+
+`sanity/webhook-revalidate.groq` is canonical. After editing it, paste filter/projection into [sanity.io/manage → Webhooks](https://www.sanity.io/manage) for production.

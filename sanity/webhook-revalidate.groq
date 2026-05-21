@@ -1,0 +1,70 @@
+// Canonical Sanity GROQ webhook filter + projection for on-demand ISR revalidation.
+// After editing, paste into https://www.sanity.io/manage → API → Webhooks.
+//
+// Webhook URL: https://cspartners.in/api/revalidate
+// Method: POST | Dataset: production | Events: create, update, delete | Include drafts: off
+// Secret: same as SANITY_REVALIDATE_SECRET in Vercel
+
+// --- FILTER (paste into the "Filter" field) ---
+
+_type in [
+  "blogPost",
+  "practiceArea",
+  "teamMember",
+  "jobPage",
+  "homePage",
+  "aboutPage",
+  "contactPage",
+  "siteSettings",
+  "disclaimerSettings"
+]
+
+// --- PROJECTION (paste into the "Projection" field) ---
+
+{
+  "paths": select(
+    _type == "blogPost" => array::unique(
+      [
+        "/blog/" + coalesce(after().slug.current, before().slug.current) + "/",
+        "/blog",
+        "/",
+        "/rss.xml"
+      ] + select(
+        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/blog/" + before().slug.current + "/"],
+        []
+      )
+    ),
+    _type == "practiceArea" => array::unique(
+      [
+        "/practice-area/" + coalesce(after().slug.current, before().slug.current) + "/",
+        "/practice-area",
+        "/"
+      ] + select(
+        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/practice-area/" + before().slug.current + "/"],
+        []
+      )
+    ),
+    _type == "teamMember" => ["/our-team", "/"],
+    _type == "jobPage" => array::unique(
+      [
+        "/jobs/" + coalesce(after().slug.current, before().slug.current) + "/"
+      ] + select(
+        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/jobs/" + before().slug.current + "/"],
+        []
+      )
+    ),
+    _type == "homePage" => ["/"],
+    _type == "aboutPage" => ["/about-us"],
+    _type == "contactPage" => ["/contact-career"],
+    _type in ["siteSettings", "disclaimerSettings"] => [
+      "/",
+      "/about-us",
+      "/contact-career",
+      "/our-team",
+      "/blog",
+      "/practice-area",
+      "/rss.xml"
+    ],
+    []
+  )
+}

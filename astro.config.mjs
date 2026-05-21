@@ -16,8 +16,9 @@ export default defineConfig({
 	adapter: vercel({
 		imageService: true,
 		isr: {
-			expiration: 60 * 60,
-			exclude: ['/_actions/*'],
+			expiration: 60 * 60 * 24,
+			bypassToken: process.env.VERCEL_ISR_BYPASS_TOKEN,
+			exclude: ['/_actions/*', '/api/revalidate'],
 		},
 	}),
 	integrations: [

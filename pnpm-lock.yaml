@@ -41,6 +41,9 @@ importers:
       '@sanity/visual-editing':
         specifier: ^5.3.4
         version: 5.3.4(@emotion/is-prop-valid@1.4.0)(@sanity/client@7.21.0)(@sanity/types@5.22.0(@types/react@19.2.14))(react-dom@19.2.5(react@19.2.5))(react-is@19.2.5)(react@19.2.5)(styled-components@6.4.1(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(typescript@5.9.3)
+      '@sanity/webhook':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@sentry/astro':
         specifier: ^10.51.0
         version: 10.51.0(astro@6.1.8(@types/node@24.12.2)(@vercel/functions@3.4.4)(jiti@2.6.1)(lightningcss@1.32.0)(rollup@4.60.2)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(rollup@4.60.2)
@@ -2528,6 +2531,10 @@ packages:
         optional: true
       svelte:
         optional: true
+
+  '@sanity/webhook@4.0.4':
+    resolution: {integrity: sha512-c8LmzR5Wx93zJ10ohhp0XlmPrTNSFyvPcLbNY/sN45Wj5VOngz4FbBMbX9j64sSQLt+676U6OhiVfjs1yw3YCw==}
+    engines: {node: '>=20.0.0'}
 
   '@sanity/worker-channels@2.0.0':
     resolution: {integrity: sha512-mC+8yPQuw2rHXdHigFPU9thNa6vTaPmh7jFR6RvloE8s+6dmnk9bHdPXRbrrUqafxzK3L9aH2E170ubXyxcAIA==}
@@ -9803,6 +9810,8 @@ snapshots:
       - '@sanity/types'
       - react-is
       - typescript
+
+  '@sanity/webhook@4.0.4': {}
 
   '@sanity/worker-channels@2.0.0': {}
 

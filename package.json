@@ -31,6 +31,7 @@
     "@sanity/client": "^7.21.0",
     "@sanity/image-url": "^2.1.1",
     "@sanity/visual-editing": "^5.3.4",
+    "@sanity/webhook": "^4.0.4",
     "@sentry/astro": "^10.51.0",
     "@tailwindcss/vite": "^4.2.2",
     "@vercel/analytics": "^2.0.1",
