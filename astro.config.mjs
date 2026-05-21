@@ -15,6 +15,10 @@ export default defineConfig({
 	output: 'server',
 	adapter: vercel({
 		imageService: true,
+		isr: {
+			expiration: 60 * 60,
+			exclude: ['/_actions/*'],
+		},
 	}),
 	integrations: [
 		sentry({
