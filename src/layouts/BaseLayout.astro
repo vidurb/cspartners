@@ -9,6 +9,8 @@ import { loadQuery } from '../lib/sanity/loadQuery';
 import { mergeLayoutSingletonsBundle } from '../lib/sanity/mergeContent';
 import type { LayoutSingletonsBundle } from '../lib/sanity/types';
 import { VisualEditing } from '@sanity/astro/visual-editing';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
@@ -29,6 +31,7 @@ const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLE
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} image={image} siteTitle={site.siteTitle} />
+		<Analytics />
 	</head>
 	<body class="min-h-screen flex flex-col bg-brand-cream text-slate-800">
 		<BotIdInit />
@@ -38,6 +41,7 @@ const visualEditingEnabled = import.meta.env.PUBLIC_SANITY_VISUAL_EDITING_ENABLE
 			<slot />
 		</main>
 		<Footer site={site} />
+		<SpeedInsights />
 		<VisualEditing enabled={visualEditingEnabled} zIndex={1000} />
 	</body>
 </html>
