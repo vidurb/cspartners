@@ -1,0 +1,42 @@
+---
+import { loadQuery } from '../../lib/sanity/loadQuery';
+import BlogCard from '../../components/BlogCard.astro';
+import Hero from '../../components/Hero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { blogPostsListQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
+import type { BlogPostListItem, SiteSettingsDoc } from '../../lib/sanity/types';
+import { resolveImageUrl } from '../../lib/sanity/imageUrl';
+import { singletonDataAttribute } from '../../lib/sanity/dataAttributes';
+import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
+
+const [siteRaw, postsRaw] = await Promise.all([
+	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
+	loadQuery<BlogPostListItem[]>(blogPostsListQuery),
+]);
+
+const site = mergeSiteSettings(siteRaw);
+const posts = postsRaw.sort((a, b) => new Date(b.publishedAt).valueOf() - new Date(a.publishedAt).valueOf());
+const readMore = site.blogReadMoreLabel ?? 'Read more';
+const siteField = (path: string) => singletonDataAttribute('siteSettings', path, site._id ?? 'siteSettings');
+---
+
+<BaseLayout title={`Recent Matters and Blogs — ${site.siteTitle}`} description={site.siteDescription ?? ''}>
+	<Hero title="Recent Matters and Blogs" variant="dark" />
+	<div class="max-w-6xl mx-auto px-4 py-16">
+		<div class="grid md:grid-cols-2 gap-8">
+			{
+				posts.map((post) => (
+					<BlogCard
+						title={post.title}
+						description={post.description}
+						href={`/recent-matters-and-blogs/${post.slug}/`}
+						pubDate={new Date(post.publishedAt)}
+						heroImageUrl={resolveImageUrl(post.heroImage, 800)}
+						readMoreLabel={readMore}
+						readMoreDataSanity={siteField('blogReadMoreLabel')}
+					/>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>

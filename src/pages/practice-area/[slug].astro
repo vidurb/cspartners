@@ -1,53 +1,7 @@
 ---
-import { loadQuery } from '../../lib/sanity/loadQuery';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Hero from '../../components/Hero.astro';
-import PortableTextBody from '../../components/PortableTextBody.astro';
-import { practiceAreaBySlugQuery, siteSettingsCompactQuery } from '../../lib/sanity/queries';
-import type { PracticeAreaDetail, SiteSettingsDoc } from '../../lib/sanity/types';
-import { resolveImageUrl } from '../../lib/sanity/imageUrl';
-import { singletonDataAttribute } from '../../lib/sanity/dataAttributes';
-import { mergeSiteSettings } from '../../lib/sanity/mergeContent';
-
 const slug = Astro.params.slug;
-if (!slug || Array.isArray(slug)) {
-	return new Response(null, { status: 404, statusText: 'Not Found' });
+if (slug && !Array.isArray(slug)) {
+	return Astro.redirect(`/practice-areas/${slug}/`);
 }
-
-const [siteRaw, entry] = await Promise.all([
-	loadQuery<Partial<SiteSettingsDoc> | null>(siteSettingsCompactQuery),
-	loadQuery<PracticeAreaDetail | null>(practiceAreaBySlugQuery, { slug }),
-]);
-
-const site = mergeSiteSettings(siteRaw);
-
-if (!entry) {
-	return new Response(null, { status: 404, statusText: 'Not Found' });
-}
-
-const { title, description, icon, body } = entry;
-const iconUrl = resolveImageUrl(icon, 128) ?? '';
-const ctaLabel = site.practiceAreaCtaLabel ?? 'Get in touch';
-const siteField = (path: string) => singletonDataAttribute('siteSettings', path, site._id ?? 'siteSettings');
+return new Response(null, { status: 404, statusText: 'Not Found' });
 ---
-
-<BaseLayout title={`${title} — ${site.siteTitle}`} description={description}>
-	<Hero title={title} variant="dark" />
-	<div class="max-w-6xl mx-auto px-4 py-12 grid lg:grid-cols-[1fr_280px] gap-12 items-start">
-		<div class="max-w-3xl text-slate-700 text-lg leading-relaxed space-y-6 [&_strong]:text-brand-navy">
-			<PortableTextBody value={body} />
-		</div>
-		<div class="hidden lg:block sticky top-28">
-			<div class="rounded-xl bg-white border border-slate-200 p-6 shadow-sm text-center">
-				{iconUrl && <img src={iconUrl} alt="" class="mx-auto max-h-32 w-auto object-contain mb-6" width={128} height={128} />}
-				<a
-					href="/contact-career"
-					class="inline-block w-full rounded-md bg-brand-gold py-2 font-semibold text-brand-navy hover:bg-brand-gold-light"
-					data-sanity={siteField('practiceAreaCtaLabel')}
-				>
-					{ctaLabel}
-				</a>
-			</div>
-		</div>
-	</div>
-</BaseLayout>

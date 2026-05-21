@@ -19,7 +19,7 @@ When changing routes, slugs, or Sanity `_type` → URL mapping, keep these align
 
 ## Conventions
 
-- Slug detail pages: trailing slash (`/blog/{slug}/`, `/practice-area/{slug}/`, `/jobs/{slug}/`).
+- Slug detail pages: trailing slash (`/recent-matters-and-blogs/{slug}/`, `/practice-areas/{slug}/`, `/jobs/{slug}/`).
 - Index routes: match existing internal `href`s in `src/pages/`.
 - `siteSettings` / `disclaimerSettings`: use the fixed fan-out list in `sanity/webhook-revalidate.groq`.
 

@@ -25,22 +25,22 @@ _type in [
   "paths": select(
     _type == "blogPost" => array::unique(
       [
-        "/blog/" + coalesce(after().slug.current, before().slug.current) + "/",
-        "/blog",
+        "/recent-matters-and-blogs/" + coalesce(after().slug.current, before().slug.current) + "/",
+        "/recent-matters-and-blogs",
         "/",
         "/rss.xml"
       ] + select(
-        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/blog/" + before().slug.current + "/"],
+        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/recent-matters-and-blogs/" + before().slug.current + "/"],
         []
       )
     ),
     _type == "practiceArea" => array::unique(
       [
-        "/practice-area/" + coalesce(after().slug.current, before().slug.current) + "/",
-        "/practice-area",
+        "/practice-areas/" + coalesce(after().slug.current, before().slug.current) + "/",
+        "/practice-areas",
         "/"
       ] + select(
-        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/practice-area/" + before().slug.current + "/"],
+        defined(before().slug.current) && before().slug.current != coalesce(after().slug.current, "") => ["/practice-areas/" + before().slug.current + "/"],
         []
       )
     ),
@@ -61,8 +61,8 @@ _type in [
       "/about-us",
       "/contact-career",
       "/our-team",
-      "/blog",
-      "/practice-area",
+      "/recent-matters-and-blogs",
+      "/practice-areas",
       "/rss.xml"
     ],
     []

@@ -21,9 +21,9 @@ export const SINGLETON_IDS = {
 
 export const DEFAULT_NAV_LINKS: NavLink[] = [
 	{ href: '/about-us', label: 'About Us' },
-	{ href: '/practice-area', label: 'Practice Areas' },
+	{ href: '/practice-areas', label: 'Practice Areas' },
 	{ href: '/our-team', label: 'Our Team' },
-	{ href: '/blog', label: 'Blogs' },
+	{ href: '/recent-matters-and-blogs', label: 'Recent Matters and Blogs' },
 	{ href: '/contact-career', label: 'Contact Us & Careers' },
 ];
 
@@ -114,7 +114,7 @@ export const DEFAULT_HOME_PAGE: HomePageDoc = {
 	practiceAreasViewAllLabel: 'View all practice areas →',
 	teamHeading: 'Our Team',
 	teamMeetFullLabel: 'Meet the full team →',
-	blogsHeading: 'Our Blogs',
+	blogsHeading: 'Recent Matters and Blogs',
 	blogsAllArticlesLabel: 'All articles →',
 	contactSectionHeading: 'Contact Us',
 	awardLogos: [],
@@ -166,7 +166,7 @@ export const DEFAULT_ABOUT_PAGE: AboutPageDoc = {
 		]),
 	],
 	practiceAreasCtaLabel: 'Explore practice areas →',
-	practiceAreasCtaHref: '/practice-area',
+	practiceAreasCtaHref: '/practice-areas',
 	contactSectionHeading: 'Contact Us',
 };
 

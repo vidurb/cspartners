@@ -1,4 +1,4 @@
-const SLUG_DETAIL_RE = /^\/(blog|practice-area|jobs)\/[^/]+\/?$/;
+const SLUG_DETAIL_RE = /^\/(recent-matters-and-blogs|practice-areas|jobs)\/[^/]+\/?$/;
 
 /** Normalize webhook paths to match internal href conventions (trailing slash on slug detail routes). */
 export function normalizePath(path: string): string {

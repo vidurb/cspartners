@@ -44,10 +44,10 @@ export default defineConfig({
 						resolve: (doc) => ({
 							locations: doc?.slug
 								? [
-										{ title: doc.title || 'Untitled blog post', href: `/blog/${doc.slug}` },
-										{ title: 'Blogs', href: '/blog' },
+										{ title: doc.title || 'Untitled blog post', href: `/recent-matters-and-blogs/${doc.slug}` },
+										{ title: 'Recent Matters and Blogs', href: '/recent-matters-and-blogs' },
 									]
-								: [{ title: 'Blogs', href: '/blog' }],
+								: [{ title: 'Recent Matters and Blogs', href: '/recent-matters-and-blogs' }],
 						}),
 					}),
 					practiceArea: defineLocations({
@@ -55,10 +55,10 @@ export default defineConfig({
 						resolve: (doc) => ({
 							locations: doc?.slug
 								? [
-										{ title: doc.title || 'Untitled practice area', href: `/practice-area/${doc.slug}` },
-										{ title: 'Practice Areas', href: '/practice-area' },
+										{ title: doc.title || 'Untitled practice area', href: `/practice-areas/${doc.slug}` },
+										{ title: 'Practice Areas', href: '/practice-areas' },
 									]
-								: [{ title: 'Practice Areas', href: '/practice-area' }],
+								: [{ title: 'Practice Areas', href: '/practice-areas' }],
 						}),
 					}),
 					teamMember: singletonLocation('Our Team', '/our-team'),

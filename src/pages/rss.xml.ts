@@ -39,7 +39,7 @@ export const GET: APIRoute = async (context) => {
 			title: post.title,
 			pubDate: new Date(post.publishedAt),
 			description: post.description,
-			link: `/blog/${post.slug}/`,
+			link: `/recent-matters-and-blogs/${post.slug}/`,
 		})),
 	});
 };

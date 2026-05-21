@@ -133,7 +133,7 @@ const siteField = (path: string) => singletonDataAttribute('siteSettings', path,
 					practiceAreas.map((p) => (
 						<PracticeAreaCard
 							title={p.title}
-							href={`/practice-area/${p.slug}/`}
+							href={`/practice-areas/${p.slug}/`}
 							iconUrl={resolveImageUrl(p.icon, 128) ?? ''}
 						/>
 					))
@@ -141,7 +141,7 @@ const siteField = (path: string) => singletonDataAttribute('siteSettings', path,
 			</div>
 			<div class="text-center mt-10">
 				<a
-					href="/practice-area"
+					href="/practice-areas"
 					class="inline-flex font-semibold text-brand-gold hover:text-brand-gold-light"
 					data-sanity={homeField('practiceAreasViewAllLabel')}
 				>
@@ -260,7 +260,7 @@ const siteField = (path: string) => singletonDataAttribute('siteSettings', path,
 								<BlogCard
 									title={post.title}
 									description={post.description}
-									href={`/blog/${post.slug}/`}
+									href={`/recent-matters-and-blogs/${post.slug}/`}
 									pubDate={new Date(post.publishedAt)}
 									heroImageUrl={resolveImageUrl(post.heroImage, 800)}
 									readMoreLabel={readMore}
@@ -272,7 +272,7 @@ const siteField = (path: string) => singletonDataAttribute('siteSettings', path,
 				</div>
 			</div>
 			<p class="text-center mt-10">
-				<a href="/blog" class="font-semibold text-brand-gold hover:text-brand-gold-light" data-sanity={homeField('blogsAllArticlesLabel')}>{home.blogsAllArticlesLabel}</a>
+				<a href="/recent-matters-and-blogs" class="font-semibold text-brand-gold hover:text-brand-gold-light" data-sanity={homeField('blogsAllArticlesLabel')}>{home.blogsAllArticlesLabel}</a>
 			</p>
 		</div>
 	</section>

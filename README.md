@@ -60,5 +60,5 @@ Canonical filter and projection live in [`sanity/webhook-revalidate.groq`](sanit
 
 1. Deploy with env vars configured.
 2. Publish a small `blogPost` edit in Studio.
-3. Sanity webhook log should show `200` and `revalidated` including `/blog/{slug}/`, `/blog`, `/`.
+3. Sanity webhook log should show `200` and `revalidated` including `/recent-matters-and-blogs/{slug}/`, `/recent-matters-and-blogs`, `/`.
 4. Reload the post in the browser — content updates without waiting for the 24h ISR fallback.
