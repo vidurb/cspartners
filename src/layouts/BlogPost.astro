@@ -11,6 +11,8 @@ interface Props {
 	updatedDate?: Date;
 	author: string;
 	heroImageUrl?: string;
+	/** Up to 2 additional images rendered after the body (3 per post including the hero). */
+	extraImages?: { url: string; alt?: string }[];
 	/** Used for OG / Twitter when no hero */
 	ogImage?: string;
 	body?: PortableTextBlock[] | null;
@@ -19,8 +21,19 @@ interface Props {
 	authorDataSanity?: string;
 }
 
-const { title, description, pubDate, updatedDate, author, heroImageUrl, ogImage, body, siteTitle = 'C&S Partners', authorDataSanity } =
-	Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	author,
+	heroImageUrl,
+	extraImages = [],
+	ogImage,
+	body,
+	siteTitle = 'C&S Partners',
+	authorDataSanity,
+} = Astro.props;
 const metaImage = heroImageUrl ?? ogImage;
 ---
 
@@ -57,6 +70,22 @@ const metaImage = heroImageUrl ?? ogImage;
 				<p class="text-slate-600 mt-3">By <span data-sanity={authorDataSanity}>{author}</span></p>
 			</header>
 			<PortableTextBody value={body} />
+			{
+				extraImages.length > 0 && (
+					<div class="mt-10 space-y-8">
+						{extraImages.map((image) => (
+							<img
+								src={image.url}
+								alt={image.alt ?? ''}
+								class="w-full rounded-xl shadow-lg border border-slate-200/80"
+								width={1200}
+								height={540}
+								loading="lazy"
+							/>
+						))}
+					</div>
+				)
+			}
 		</div>
 	</article>
 </BaseLayout>

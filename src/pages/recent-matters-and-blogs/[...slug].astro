@@ -24,6 +24,10 @@ if (!post) {
 }
 
 const heroImageUrl = resolveImageUrl(post.heroImage, 1200);
+const extraImages = (post.extraImages ?? [])
+	.slice(0, 2)
+	.map((image) => ({ url: resolveImageUrl(image, 1200), alt: image.alt ?? undefined }))
+	.filter((image): image is { url: string; alt: string | undefined } => Boolean(image.url));
 const author = post.author?.trim() || site.blogAuthorFallback || site.siteTitle;
 const authorDataSanity = post.author?.trim()
 	? undefined
@@ -37,6 +41,7 @@ const authorDataSanity = post.author?.trim()
 	updatedDate={post.updatedAt ? new Date(post.updatedAt) : undefined}
 	author={author}
 	heroImageUrl={heroImageUrl}
+	extraImages={extraImages}
 	body={post.body}
 	siteTitle={site.siteTitle}
 	authorDataSanity={authorDataSanity}

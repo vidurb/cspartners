@@ -31,7 +31,8 @@ export const blogPostBySlugQuery = /* groq */ `
     updatedAt,
     author,
     body,
-    "heroImage": heroImage ${imageProjection}
+    "heroImage": heroImage ${imageProjection},
+    "extraImages": extraImages[] ${imageProjection}
   }
 `;
 

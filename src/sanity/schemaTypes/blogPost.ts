@@ -49,6 +49,26 @@ export default defineType({
 			options: { hotspot: true },
 		}),
 		defineField({
+			name: 'extraImages',
+			title: 'Additional images',
+			description: 'Up to 2 more images shown after the article body (3 per post including the hero image).',
+			type: 'array',
+			of: [
+				{
+					type: 'image',
+					options: { hotspot: true },
+					fields: [
+						defineField({
+							name: 'alt',
+							title: 'Alternative text',
+							type: 'string',
+						}),
+					],
+				},
+			],
+			validation: (Rule) => Rule.max(2),
+		}),
+		defineField({
 			name: 'body',
 			title: 'Body',
 			type: 'array',

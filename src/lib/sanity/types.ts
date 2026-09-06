@@ -14,8 +14,11 @@ export type BlogPostListItem = {
 	body?: PortableTextBlock[] | null;
 };
 
+export type BlogPostExtraImage = SanityImageAsset & { _key?: string; alt?: string | null };
+
 export type BlogPostDetail = BlogPostListItem & {
 	body?: PortableTextBlock[] | null;
+	extraImages?: BlogPostExtraImage[] | null;
 };
 
 export type PracticeAreaListItem = {
